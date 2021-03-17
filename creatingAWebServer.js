@@ -45,9 +45,15 @@ const replaceTemplate = (template, product)=>{
 // first create the server and then start the server 
 
 const server= http.createServer((req, res) => {
-    const pathName = req.url
+    
+    const {pathname,query} =url.parse(req.url,true)
+
+    
+    
+    
+    
     //overview page 
-    if(pathName === '/overview' || pathName === '/'){
+    if(pathname === '/overview' || pathname === '/'){
         
         res.writeHead(200, {
             "content-type": "text/html"
@@ -66,7 +72,17 @@ const server= http.createServer((req, res) => {
     }
     
     //product page
-    if(pathName === '/product'){
+    if(pathname === '/product'){
+        
+        const product = dataObject[query.id];
+        const template = replaceTemplate(tempProduct,product)
+        
+       res.writeHead(200,{
+           "content-type": "text/html"
+       })
+        
+       res.end(template)
+        
 
         res.end('this is the product page')
     }
