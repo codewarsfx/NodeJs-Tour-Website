@@ -2,6 +2,11 @@ const http= require('http')
 const url= require('url');
 const fs = require('fs');
 
+const slugify= require('slugify');
+
+
+const replaceTemplate = require('./replace')
+
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8')
 const tempOverview = fs.readFileSync(`${__dirname}/templates/overview.html`,'utf-8')
 const tempCard = fs.readFileSync(`${__dirname}/templates/cardTemplate.html`,'utf-8')
@@ -12,26 +17,8 @@ const dataObject= JSON.parse(data)
 
 
 
-const replaceTemplate = (template, product)=>{
-    
-    let output= template.replace(/{%productName%}/g,product.productName);
-     
-    output= output.replace(/{%price%}/g,product.price);
-    output= output.replace(/{%image%}/g,product.image);
-    
-    output=output.replace(/{%quantity%}/g,product.quantity);
-    
-    output=output.replace(/{%description%}/g,product.description);
-    output=output.replace(/{%id%}/g,product.id);
-    output=output.replace(/{%productFrom%}/g,product.from);
-    output=output.replace(/{%productNutrient%}/g,product.nutrients);
-    
-    if(!product.organic){
-        output=output.replace(/{%organic%}/g,'not-organic')
-    }
-    return output
-    
-}
+
+
 
 
 
@@ -108,3 +95,4 @@ const server= http.createServer((req, res) => {
 server.listen(8000,'127.0.0.1',()=>{
     console.log('server is running and listen to requests on port 8000')
 });
+ 
