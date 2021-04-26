@@ -1,0 +1,14 @@
+{
+  "name": "nators",
+  "version": "1.0.0",
+  "description": "learning node express and mongo db",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Innocent chidera Shammah",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
