@@ -1,9 +1,15 @@
 const fs = require('fs')
 const express = require('express')
-
 const app = express()
+const morgan = require('morgan')
 
+
+
+// MIDDLEWARE
 app.use(express.json())
+app.use(morgan("dev"))
+
+
 
 const data= fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`,"utf-8",(error)=>{
     if(error) console.log('an error occured while reading file ');
@@ -12,17 +18,16 @@ const data= fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`,"utf-
 const toursData =JSON.parse(data)
 
 
-
-app.get('/api/v1/tours',(req,res)=>{
-    
+//ROUTE HANDLERS 
+const getTours=(req,res)=>{
     res.status(200).json({
         "status":"success",
         "results":toursData.length,
         "data":toursData
     })
-})
+}
 
-app.post('/api/v1/tours',(req,res)=>{
+const createTour =(req,res)=>{
     const newTourId= (toursData.length-1) + 1
     
     const newTour = Object.assign({id:newTourId},req.body)
@@ -37,11 +42,11 @@ app.post('/api/v1/tours',(req,res)=>{
            "data": newTour
        })
    })    
-})
+}
 
-app.get('/api/v1/tours/:id',(req, res)=>{
+const getTour =(req, res)=>{
     
-    const tour = toursData.find(item=>item.id === +(req.params.id))
+    const tour = toursData.find(item=>item.id === +(req.params.id)) 
 
     if(!tour) return res.status(404).json({
         "status": "fail",
@@ -53,9 +58,9 @@ app.get('/api/v1/tours/:id',(req, res)=>{
         "data": tour
     })
     
-})
+}
 
-app.patch('/api/v1/tours/:id',(req,res)=>{
+const updateTour =(req,res)=>{
     
     if(+(req.params.id) > toursData.length) return res.status(404).json({
         "status": "fail",
@@ -68,9 +73,9 @@ app.patch('/api/v1/tours/:id',(req,res)=>{
     })
     
     
-})
+}
 
-app.delete('/api/v1/tours/:id',(req,res)=>{
+const deleteTour=(req,res)=>{
     
     if(+(req.params.id) > toursData.length) return res.status(404).json({
         "status": "fail",
@@ -83,8 +88,15 @@ app.delete('/api/v1/tours/:id',(req,res)=>{
     })
     
     
-})
+}
 
+
+//ROUTES
+
+app.route('/api/v1/tours').get(getTours).post(createTour)
+app.route('/api/v1/tours/:id').patch(updateTour).delete(deleteTour).get(getTour)
+
+//SERVER
 const port =3000
 app.listen(port,()=>{
     console.log('app is running on port 3000')
