@@ -8,6 +8,8 @@ const data= fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`,"u
 
 const toursData =JSON.parse(data)
 
+exports.data =toursData
+
 
 //ROUTE HANDLERS 
 exports.getTours=(req,res)=>{
@@ -37,12 +39,8 @@ exports.createTour =(req,res)=>{
 
 exports.getTour =(req, res)=>{
     
-    const tour = toursData.find(item=>item.id === +(req.params.id)) 
-
-    if(!tour) return res.status(404).json({
-        "status": "fail",
-        "message": "tour id not found"
-    });
+    const tour = toursData.find(tour=>tour.id=== +(req.params.id))
+    
     
     res.status(200).json({
         "status": "success",
@@ -53,11 +51,6 @@ exports.getTour =(req, res)=>{
 
 exports.updateTour =(req,res)=>{
     
-    if(+(req.params.id) > toursData.length) return res.status(404).json({
-        "status": "fail",
-        "message": "tour id not found"
-    });
-    
     res.status(200).json({
         "status": "success",
         "data": "successfully updated"
@@ -67,12 +60,6 @@ exports.updateTour =(req,res)=>{
 }
 
 exports.deleteTour=(req,res)=>{
-    
-    if(+(req.params.id) > toursData.length) return res.status(404).json({
-        "status": "fail",
-        "message": "tour id not found"
-    });
-    
     res.status(204).json({
         "status": "success",
         "data": "no content"
