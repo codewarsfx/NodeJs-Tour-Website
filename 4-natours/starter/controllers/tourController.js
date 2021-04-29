@@ -8,7 +8,26 @@ const data= fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`,"u
 
 const toursData =JSON.parse(data)
 
-exports.data =toursData
+
+exports.checkId=(req,res,next,val)=>{
+    if(val > toursData.length ) return res.status(404).json({
+        "status":"not found ",
+        "message": "resource not found "
+    })
+    next()
+}
+
+
+exports.checkBody = (req,res,next)=>{
+    const {name,price} = req.body 
+    
+    if(!(name && price )) return res.status(400).json({
+        "status": "bad request",
+        "message " :" incorrect request body"
+    })
+    
+    next()
+}
 
 
 //ROUTE HANDLERS 
