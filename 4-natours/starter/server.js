@@ -18,33 +18,7 @@ mongoose.connect(db, {
 
 
 
-//Schema blueprint 
 
-const tourSchema = new mongoose.Schema({
-    name: {
-        type:String,
-        required:[true,"a Name is required "],
-        unique: true   
-    },
-    rating: {
-        type:Number,
-        default:4.5
-    },
-    price: {
-        type:Number,
-        required:[true,"A price value must be presented"]
-    }
-})
-
-const Tour = mongoose.model('Tour',tourSchema)
-
-const newTour = new Tour({
-    name:"chidera",
-    rating: 5.3,
-    price:500
-})
-
-newTour.save().then(doc=>console.log(doc))
 
 
   

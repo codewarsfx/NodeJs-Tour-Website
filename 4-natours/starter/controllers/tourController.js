@@ -1,6 +1,8 @@
 
 const fs = require('fs')
 
+const Tour = require('../Models/tourModels')
+
 
 const data= fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`,"utf-8",(error)=>{
     if(error) console.log('an error occured while reading file ');
