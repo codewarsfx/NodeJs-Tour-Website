@@ -3,10 +3,10 @@ const express = require('express');
 const tourController= require(`../controllers/tourController`);
 
 const Router = express.Router();
-Router.param('id', tourController.checkId)
+// Router.param('id', tourController.checkId)
 
-
-Router.route('/').get(tourController.getTours).post(tourController.checkBody,tourController.createTour)
+Router.route('/top5-most-expesive-tours').get(tourController.aliaseController, tourController.getTours)
+Router.route('/').get(tourController.getTours).post(tourController.createTour)
 Router.route('/:id').patch(tourController.updateTour).delete(tourController.deleteTour).get(tourController.getTour)
 
 

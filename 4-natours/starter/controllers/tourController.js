@@ -1,90 +1,115 @@
 
-const fs = require('fs')
+// const fs = require('fs')
 
 const Tour = require('../Models/tourModels')
+const ApiFeatures = require('../utils/apiFeatures')
 
 
-const data= fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`,"utf-8",(error)=>{
-    if(error) console.log('an error occured while reading file ');
-})
-
-const toursData =JSON.parse(data)
 
 
-exports.checkId=(req,res,next,val)=>{
-    if(val > toursData.length ) return res.status(404).json({
-        "status":"not found ",
-        "message": "resource not found "
-    })
-    next()
-}
-
-
-exports.checkBody = (req,res,next)=>{
-    const {name,price} = req.body 
-    
-    if(!(name && price )) return res.status(400).json({
-        "status": "bad request",
-        "message " :" incorrect request body"
-    })
-    
-    next()
+exports.aliaseController = (req, res,next) =>{
+     req.query.page= '1'
+     req.query.sort ='-price'
+     req.query.limit ='5'
+     
+     next()
 }
 
 
 //ROUTE HANDLERS 
-exports.getTours=(req,res)=>{
+exports.getTours=async (req,res)=>{
+
+    try{
+       
+     const toursQueryObject = new ApiFeatures(Tour.find(),req.query)
+                                                                    .filter()
+                                                                    .sort()
+                                                                    .fieldLimiting()
+                                                                    .pagination()
+
+    
+     const toursData = await toursQueryObject
+    
+
+    //send the response 
     res.status(200).json({
-        "status":"success",
-        "results":toursData.length,
+        'message':"success",
+        'results': toursData.length,
         "data":toursData
     })
 }
+catch(error){
+    res.status(400).json({
+        'message':"error",
+        "error": error.message
+    })
+}
+}
 
-exports.createTour =(req,res)=>{
-    const newTourId= (toursData.length-1) + 1
+exports.createTour = async (req,res)=>{
     
-    const newTour = Object.assign({id:newTourId},req.body)
-    
-    const newTours = [...toursData,newTour]
-
-   fs.writeFile(`${__dirname}/../dev-data/data/tours-simple.json`,JSON.stringify(newTours),(error)=>{
-       if(error) console.error('an error occured when trying to write file to system');
-       
-       res.status(201).json({
-           "status":"success",
-           "data": newTour
+    try{
+        const createdTour = await Tour.create(req.body) 
+       res.status(200).json({
+           status:"success",
+           data: createdTour
        })
-   })    
+        
+    }
+    catch(error){
+        res.status(400).json({
+            "status":"fail",
+            "message":error.message
+        })
+    }
 }
 
-exports.getTour =(req, res)=>{
-    
-    const tour = toursData.find(tour=>tour.id=== +(req.params.id))
-    
-    
+exports.getTour =async (req, res)=>{
+    try{
+    const TourData = await Tour.find({"_id":req.params.id})
     res.status(200).json({
-        "status": "success",
-        "data": tour
-    })
-    
+        "message":"success",
+        "data": TourData
+    })}
+    catch(error){
+        console.error(error.message)
+    }
 }
 
-exports.updateTour =(req,res)=>{
-    
-    res.status(200).json({
-        "status": "success",
-        "data": "successfully updated"
-    })
-    
-    
+exports.updateTour =async (req,res)=>{
+    try{
+        const updatedTour= await Tour.findByIdAndUpdate(req.params.id,req.body,{
+           new:true,   
+        })  
+        res.status(201).json({
+            "message": "success",
+            "data": updatedTour
+        })
+    }
+    catch(error){
+        console.error(error.message)
+    }
 }
 
-exports.deleteTour=(req,res)=>{
-    res.status(204).json({
-        "status": "success",
-        "data": "no content"
-    })
+exports.deleteTour=async (req,res)=>{
+    
+        try{
+            
+            const deletedTour = await Tour.findByIdAndDelete(req.params.id);
+            
+            res.status(200).json({
+                "message": "success",
+                data: deletedTour
+            })
+            
+            
+        
+    }
+    catch(error){
+        console.error(error.mesage)
+    }
+
+
     
     
 }
