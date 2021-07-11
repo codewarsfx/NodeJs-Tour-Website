@@ -41,6 +41,10 @@ const tourSchema = new mongoose.Schema({
         default:[true,'an array of start dates is required ']
         
     },
+    ratingsQuantity:{
+        type:Number,
+        require:[true,"please provide a rating Quantity"]
+    },
     ratingsAverage:{
         type: Number,
         required:[true," ratings average must be provided"],
@@ -53,7 +57,8 @@ const tourSchema = new mongoose.Schema({
     images:{
         type:[String],
         required:[true,'an array of images is required']
-    }
+    },
+    difficulty: String
     
     
 })

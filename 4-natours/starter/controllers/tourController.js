@@ -113,3 +113,60 @@ exports.deleteTour=async (req,res)=>{
     
     
 }
+
+exports.aggregationPipelineForAVerages = async (req,res) => {
+      
+    try{
+        
+        const stats =await Tour.aggregate([
+            {
+                $match:{ratingsAverage:{$gte:4.5}}
+            },{
+                $group :{
+                    _id:'$difficulty',
+                    numberTours:{$sum:1},
+                    numberRatings:{$sum:"$ratingsQuantity"},
+                    averageRating:{$avg:"$ratingsAverage"},
+                    averagePrice: {$avg:"$price"},
+                    minPrice:{$min:"$price"},
+                    maxPrice:{$max:"$price"}
+                },
+                
+            },{
+                $sort:{
+                    averagePrice:-1
+                }
+            }
+        ])
+        
+        res.status(200).json({
+            "message":"success",
+            "data":stats
+        })
+        
+        
+    }
+    catch(error){
+           res.status(404).json({
+            "message":"Bad request",
+            "error": error.message
+        })
+    
+}
+}
+
+exports.aggregateForBusiestMonth = async (req,res)=>{
+    
+    try{
+        const {params:{year}}= req
+        console.log(year)
+    }
+    
+    catch(error) {
+        res.status(404).json({
+            "message":"Bad request",
+            "error": error.message
+        })
+    }
+    
+}
