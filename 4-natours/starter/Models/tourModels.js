@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const slugify = require('slugify')
 
 
 // Schema and model for tour data
@@ -41,6 +42,7 @@ const tourSchema = new mongoose.Schema({
         default:[true,'an array of start dates is required ']
         
     },
+    slug:String,
     ratingsQuantity:{
         type:Number,
         require:[true,"please provide a rating Quantity"]
@@ -74,7 +76,16 @@ tourSchema.virtual('weeklyDuration').get(function(){
    return  this.duration / 7
 })
 
-//the doucment middleware represents a function that is run before the creatae or save method of a mongoose model is run..this mean u can actually perform some actions before the document is saved 
+//the doucment middleware represents a function that is run before the creatae or save method of a mongoose model is run..this mean u can actually perform some actions before the document is saved
+
+tourSchema.pre('save',function(next){
+    console.log(this.name)
+    this.slug= slugify(this.name,{
+        lowercase:true
+    })
+    
+    next()
+})
 
 
 const Tour = mongoose.model('Tour',tourSchema)
