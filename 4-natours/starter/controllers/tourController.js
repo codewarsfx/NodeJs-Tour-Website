@@ -159,7 +159,41 @@ exports.aggregateForBusiestMonth = async (req,res)=>{
     
     try{
         const {params:{year}}= req
-        console.log(year)
+        const plan = await Tour.aggregate([
+            {
+                $unwind : "$startDates"
+            },
+            {
+                $match:{startDates:{
+                    $gte: new Date(`${+year}-01-01`),
+                    $lte:new Date(`${+year}-12-31`)
+                }}
+            },
+            {
+                $group:{
+                    _id: {
+                        $month: "$startDates"
+                    },
+                    numberPerMonth : {
+                        $sum: 1
+                    },
+                    names:{
+                        $push : "$name"
+                    }
+                }
+            },
+            {
+                $sort:{
+                    numberPerMonth: -1
+                }
+            },
+      
+        ])
+        
+        res.status(200).json({
+            "message":"success",
+            "data":plan
+        })
     }
     
     catch(error) {

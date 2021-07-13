@@ -61,7 +61,21 @@ const tourSchema = new mongoose.Schema({
     difficulty: String
     
     
+},{
+    toJSON:{
+        virtuals:true
+    },
+    toObject:{
+        virtuals:true
+    }
 })
+//virtual properties are used to represent properties in our schema that we dont really need to save in our database ..u just need them created on the fly using database field values but dont need to persist them to your database
+tourSchema.virtual('weeklyDuration').get(function(){
+   return  this.duration / 7
+})
+
+//the doucment middleware represents a function that is run before the creatae or save method of a mongoose model is run..this mean u can actually perform some actions before the document is saved 
+
 
 const Tour = mongoose.model('Tour',tourSchema)
 
