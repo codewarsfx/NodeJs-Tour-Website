@@ -42,6 +42,7 @@ const tourSchema = new mongoose.Schema({
         default:[true,'an array of start dates is required ']
         
     },
+    secretTours:Boolean,
     slug:String,
     ratingsQuantity:{
         type:Number,
@@ -86,6 +87,17 @@ tourSchema.pre('save',function(next){
     
     next()
 })
+
+tourSchema.pre(/^find/, function(next){
+    
+    this.find({secretTours:{$ne:true}})
+    
+    next()
+    
+    
+})
+
+
 
 
 const Tour = mongoose.model('Tour',tourSchema)
