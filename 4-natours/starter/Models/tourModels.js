@@ -1,6 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const slugify = require('slugify')
-
 
 // Schema and model for tour data
 const tourSchema = new mongoose.Schema({
@@ -39,8 +38,7 @@ const tourSchema = new mongoose.Schema({
     },
     startDates:{
         type:[Date],
-        default:[true,'an array of start dates is required ']
-        
+        required:[true,'an array of start dates is required ']   
     },
     secretTours:Boolean,
     slug:String,
@@ -72,7 +70,9 @@ const tourSchema = new mongoose.Schema({
         virtuals:true
     }
 })
-//virtual properties are used to represent properties in our schema that we dont really need to save in our database ..u just need them created on the fly using database field values but dont need to persist them to your database
+
+// virtual properties are used to represent properties in our schema that we dont really need to save in our database ..u just need them created on the fly using database field values but dont need to persist them to your database
+
 tourSchema.virtual('weeklyDuration').get(function(){
    return  this.duration / 7
 })
@@ -80,7 +80,6 @@ tourSchema.virtual('weeklyDuration').get(function(){
 //the doucment middleware represents a function that is run before the creatae or save method of a mongoose model is run..this mean u can actually perform some actions before the document is saved
 
 tourSchema.pre('save',function(next){
-    console.log(this.name)
     this.slug= slugify(this.name,{
         lowercase:true
     })

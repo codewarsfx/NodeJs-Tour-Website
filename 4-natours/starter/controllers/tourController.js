@@ -1,36 +1,30 @@
 
-// const fs = require('fs')
+
 
 const Tour = require('../Models/tourModels')
 const ApiFeatures = require('../utils/apiFeatures')
+const asyncErrorCatcher = require('../utils/AsyncErrorCatcher')
 
 
 
 
-exports.aliaseController = (req, res,next) =>{
+exports.aliaseController = (req,res,next) =>{
      req.query.page= '1'
      req.query.sort ='-price'
      req.query.limit ='5'
-     
      next()
 }
 
 
 //ROUTE HANDLERS 
-exports.getTours=async (req,res)=>{
-
-    try{
-       
+exports.getTours= asyncErrorCatcher(async (req,res,next)=>{
+    
      const toursQueryObject = new ApiFeatures(Tour.find(),req.query)
                                                                     .filter()
                                                                     .sort()
                                                                     .fieldLimiting()
                                                                     .pagination()
-
-    
      const toursData = await toursQueryObject
-    
-
     //send the response 
     res.status(200).json({
         'message':"success",
@@ -38,86 +32,49 @@ exports.getTours=async (req,res)=>{
         "data":toursData
     })
 }
-catch(error){
-    res.status(400).json({
-        'message':"error",
-        "error": error.message
-    })
-}
-}
+)
 
-exports.createTour = async (req,res)=>{
-    
-    try{
-        const createdTour = await Tour.create(req.body) 
+
+exports.createTour = asyncErrorCatcher(async (req,res,next) =>{
+    console.log(req.body)
+       const createdTour = await Tour.create(req.body) 
        res.status(200).json({
            status:"success",
            data: createdTour
        })
-        
-    }
-    catch(error){
-        res.status(400).json({
-            "status":"fail",
-            "message":error.message
-        })
-    }
-}
+})
 
-exports.getTour =async (req, res)=>{
-    try{
+
+
+exports.getTour =asyncErrorCatcher(async (req, res)=>{
     const TourData = await Tour.find({"_id":req.params.id})
     res.status(200).json({
         "message":"success",
         "data": TourData
-    })}
-    catch(error){
-        console.error(error.message)
-    }
-}
+    }) 
+})
 
-exports.updateTour =async (req,res)=>{
-    try{
+exports.updateTour =asyncErrorCatcher(async (req,res) =>{
         const updatedTour= await Tour.findByIdAndUpdate(req.params.id,req.body,{
            new:true,   
         })  
         res.status(201).json({
             "message": "success",
             "data": updatedTour
-        })
-    }
-    catch(error){
-        console.error(error.message)
-    }
-}
+        })  
+})
 
-exports.deleteTour=async (req,res)=>{
-    
-        try{
-            
+exports.deleteTour=asyncErrorCatcher(async (req,res)=>{
             const deletedTour = await Tour.findByIdAndDelete(req.params.id);
             
             res.status(200).json({
                 "message": "success",
                 data: deletedTour
             })
-            
-            
-        
-    }
-    catch(error){
-        console.error(error.mesage)
-    }
+})
 
 
-    
-    
-}
-
-exports.aggregationPipelineForAVerages = async (req,res) => {
-      
-    try{
-        
+exports.aggregationPipelineForAVerages = asyncErrorCatcher(async (req,res) => {
         const stats =await Tour.aggregate([
             {
                 $match:{ratingsAverage:{$gte:4.5}}
@@ -138,26 +95,13 @@ exports.aggregationPipelineForAVerages = async (req,res) => {
                 }
             }
         ])
-        
         res.status(200).json({
             "message":"success",
             "data":stats
         })
-        
-        
-    }
-    catch(error){
-           res.status(404).json({
-            "message":"Bad request",
-            "error": error.message
-        })
-    
-}
-}
+})
 
-exports.aggregateForBusiestMonth = async (req,res)=>{
-    
-    try{
+exports.aggregateForBusiestMonth = asyncErrorCatcher(async (req,res)=>{
         const {params:{year}}= req
         const plan = await Tour.aggregate([
             {
@@ -189,18 +133,8 @@ exports.aggregateForBusiestMonth = async (req,res)=>{
             },
       
         ])
-        
         res.status(200).json({
             "message":"success",
             "data":plan
         })
-    }
-    
-    catch(error) {
-        res.status(404).json({
-            "message":"Bad request",
-            "error": error.message
-        })
-    }
-    
-}
+})
