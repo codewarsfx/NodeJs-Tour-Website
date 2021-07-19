@@ -1,11 +1,15 @@
 {
   "name": "nators",
   "version": "1.0.0",
+    "engines": {
+        "node": ">=8.3.0"
+    },
   "description": "learning node express and mongo db",
-  "main": "starter/server.js",
+  "main":"starter/server",
+  
   "scripts": {
-    "start": "nodemon server.js",
-    "start:prod": "NODE_ENV=production nodemon server.js"
+    "start": " nodemon server.js",
+    "start:prod": "SET NODE_ENV = production & nodemon starter/server.js"
   },
   "author": "Innocent chidera Shammah",
   "license": "ISC",

@@ -35,8 +35,7 @@ exports.getTours= asyncErrorCatcher(async (req,res,next)=>{
 )
 
 
-exports.createTour = asyncErrorCatcher(async (req,res,next) =>{
-    console.log(req.body)
+exports.createTour = asyncErrorCatcher(async (req,res,next) => {
        const createdTour = await Tour.create(req.body) 
        res.status(200).json({
            status:"success",
