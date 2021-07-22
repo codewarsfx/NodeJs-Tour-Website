@@ -31,9 +31,7 @@ app.all('*',(req, res, next) =>{
      
 })   
 
-process.on('uncaughtException',(err)=>{
-     console.error(err)
-})
+
 
 //general error middleware
 app.use(errorController)

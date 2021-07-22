@@ -1,11 +1,11 @@
+const AsyncErrorCatcher = require('../utils/AsyncErrorCatcher')
 
-
-exports.getUsers = (req, res) =>{
-    res.status(200).json({
-        "status": "success",
-        "data":"ok"
-    })  
-}
+exports.getUsers = AsyncErrorCatcher(
+    async (req, res,next)=>{
+        
+        
+    }
+)
 
 exports.createUser = (req, res) =>{
         res.status(201).json({

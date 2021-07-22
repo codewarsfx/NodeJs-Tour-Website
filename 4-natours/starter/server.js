@@ -7,7 +7,14 @@ const app = require('./app');
 const db = process.env.DATABASE.replace('<PASSWORD>',process.env.DATABASE_PASSWORD)
 
 
+//catching synchronous errors around th
+process.on('uncaughtException',error=>{
+    console.error(error.message,error.name)
+    process.exit(1)
+})
 
+
+//connect to mongoose db atlas server
 mongoose.connect(db, {
     useNewUrlParser:true,
     useFindAndModify:false,
@@ -21,8 +28,16 @@ mongoose.connect(db, {
 
 //SERVER
 const port =process.env.PORT || 3000
-app.listen(port,()=>{
+const server=app.listen(port,()=>{
     console.log(`app is running on port ${port}`) 
 })
 
+
+process.on("unhandledRejection",error=>{
+    console.error(error.message,error.name)
+    server.close(()=>{
+        console.log("shutting down the server cause an error occured...")
+        process.exit(1)
+    })
+})
 
