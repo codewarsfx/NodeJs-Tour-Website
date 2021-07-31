@@ -53,6 +53,11 @@ const handleValidationError = (error)=>{
 }
 
 
+const handleJsonWebTokenError = ()=> new AppError('Invalid Token . Please try logging in again', 401)
+     
+const handleJsonWebTokenExpired = ()=> new AppError('Token for this user is Expired',401 )
+
+
 
 
 
@@ -76,6 +81,13 @@ module.exports = (error,req,res,next) =>{
           if(error.name ==="ValidationError"){
                newError = handleValidationError(error)
           }
+          if(error.name === "JsonWebTokenError"){
+               newError = handleJsonWebTokenError()
+          }
+          if(error.name === "TokenExpiredError"){
+               newError = handleJsonWebTokenExpired()
+          }
+          
           
           
           

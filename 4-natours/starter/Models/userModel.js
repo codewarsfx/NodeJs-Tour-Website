@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema({
     password : {
         type: String,
         required : [true,"The password field is required"],
-        minlength: 8    
+        minlength: 8,
+        select:false   
     },
     confirmPassword : {
         type: String,
@@ -29,8 +30,9 @@ const userSchema = new mongoose.Schema({
                 return this.password === entry
             },
             message: "doesnt match entered password "
-        }
-    }
+        
+    }},
+    passwordChangedAt : Date
 })
 
 
@@ -41,11 +43,23 @@ userSchema.pre('save', async function(next){
     if(!this.isModified) return next();
     
     this.password = await bcrypt.hash(this.password,12)
-    this.confirmPassword =undefined
+    this.confirmPassword = undefined
     
     next()
     
 })
+
+userSchema.methods.comparePasswords =async function(reqPassword, databasePassword){
+    return await bcrypt.compare(reqPassword, databasePassword)  
+}
+
+userSchema.methods.comparePasswordDates = async function( jsonWebTokenTime){
+    
+    
+    
+    const dateUpdated =  this.passwordChangedAt.getTime()/1000
+    return jsonWebTokenTime < dateUpdated
+}
 
 const UserModel = mongoose.model('User',userSchema)
 

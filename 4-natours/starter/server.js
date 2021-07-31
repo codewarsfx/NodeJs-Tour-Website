@@ -32,7 +32,7 @@ const server=app.listen(port,()=>{
     console.log(`app is running on port ${port}`) 
 })
 
-
+// catching async errors    
 process.on("unhandledRejection",error=>{
     console.error(error.message,error.name)
     server.close(()=>{
