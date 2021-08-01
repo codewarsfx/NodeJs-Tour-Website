@@ -32,7 +32,12 @@ const userSchema = new mongoose.Schema({
             message: "doesnt match entered password "
         
     }},
-    passwordChangedAt : Date
+    passwordChangedAt : Date,
+    role:{
+        type:String,
+        default : "user",
+        enum : ["admin", "user","tour-guide","lead-tour-guide"]
+    }
 })
 
 
