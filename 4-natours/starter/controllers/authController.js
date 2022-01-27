@@ -1,87 +1,105 @@
+const jwt = require('jsonwebtoken')
 
-const jsonwebtoken = require('jsonwebtoken')
-const {promisify} = require('util')
-
-
-const AppError = require('../utils/appError')
 const asyncErrorCatcher = require('../utils/AsyncErrorCatcher')
-const User = require('../Models/userModel')
+const UserModel = require('../Models/userModel')
+const AppError = require('../utils/appError')
 
 
+const signJWT = (id) => jwt.sign({id},process.env.SIGNATURE,{
+        expiresIn:process.env.EXPIRY_DATE
+    })
 
-exports.signUp = asyncErrorCatcher(async (req,res,next)=>{
-    const newUser = await User.create(req.body)
-    const jwt = await jsonwebtoken.sign({id:newUser._id},process.env.JWT_SECRET_PHRASE,{expiresIn:process.env.JWT_EXPIRATION})
+
+exports.signup = asyncErrorCatcher(async (req,res)=>{
+    const userData = await UserModel.create(req.body)
+    
+    const  jwtToken = await signJWT(userData._id)
     res.status(201).json({
-        "status":"success",
-        jwt,
-        "user" : newUser
-    }) 
+        message:"success",
+        userData,
+        jwtToken
+    })
+    
 })
 
-exports.login = asyncErrorCatcher(async (req,res,next)=>{
-    const {email,password} = req.body
-// 1. //check if email and password is included in the request's body 
-    if(!email || !password){
-        return next(new AppError('please provide values for email and password',401))
-    }  
-// 2. find the user who has that email and confirm the paswword is the same 
-   const userMatch = await User.findOne({email}).select('+password')
-   if(!userMatch || !(await userMatch.comparePasswords(password,userMatch.password))){
-       return next(new AppError('sorry the email and password isnt correct',403))
-   }
-   // genrate jwt token  
-   const jwtToken = jsonwebtoken.sign({id:userMatch._id},process.env.JWT_SECRET_PHRASE,{expiresIn:process.env.JWT_EXPIRATION})
+// login functionality
+
+exports.login = asyncErrorCatcher( async (req,res,next)=>{
+    const {email, password} = req.body
+    
+    // check if there is an email and password 
+    if(!email || !password) return next(new AppError("please include an email and password",401));
+    
+    
+    //find the user with that email and confirm the password is the same as
+    const userWithEmail = await UserModel.findOne({email}).select('+password')
+    
+    const passwordCorrect = await userWithEmail.comparePasswords(password,userWithEmail.password)
+    
+    
+    if(!userWithEmail || !passwordCorrect)return next(new AppError('you have entered an incorrect email or password ',401));
    
-   res.status(200).json({
-       "status" : "success",
-       jwt: jwtToken
-   })
-  
+    const jwtToken  = await signJWT(userWithEmail._id)
+    
+    //if the password isnt correct return error .if it is send a jwt token to the client 
+    
+    res.status(200).json({message:'success',jwtToken})
+    
+    
+    
 })
 
-
+//in order to protect access to certain routes there'd be some kind of protection mechanism to grant access to only protected users.
 
 exports.protect = asyncErrorCatcher(async (req,res,next)=>{
-    //check if there is a jwt token in the request header
-    if(!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')){
-        return next(new AppError('please login to gain access to this resource',401))
-    }
-   const token = req.headers.authorization.split(' ')[1]
-   const decoded  = await  promisify(jsonwebtoken.verify)(token, process.env.JWT_SECRET_PHRASE)
-    //check if the user for that jwt token still exists
-    const newUser = await User.findById(decoded.id)
-    if(!newUser){
-        return  next(new AppError('the user with this token does not exist ', 401))
-    }
-    //check if the password of the user has changed since the token was issued S
-    if(await newUser.comparePasswordDates(decoded.iat)){
-        return next(new AppError('The user with this token has updated his Password'),401)
-    }
+    // the protection algorithm is as follows
+    let token;
     
-    req.user = newUser
+    // 1. check if the token exists in the request header
+    if(!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) return next(new AppError('Please login to receive authorization token',401));
+    
+    token = req.headers.authorization.split(' ')[1]
+    
+    //2. verify the token and get it's payload. two kind of errors can occur in the verification stage
+    const jwtTokenPayload = await jwt.verify(token,process.env.SIGNATURE)
+    
+    // 1. the token is expired. the next is that the token's payload has been tampered with since the last time it was signed 
+    
+    // After verifying the token check that the user with that token still exist in your database
+    const currentUser = await UserModel.findById(jwtTokenPayload.id)
+    if(!currentUser) return next(new AppError('Sorry User with that token  doesnt exist please create an account'),401)
+    
+    
+    //lastly confirm that the user passw3ord hasnt changed since the token was issued 
+    
+    if(currentUser.checkPasswordUpdate(jwtTokenPayload.iat)) return next(new AppError('User modified this password already',401))
+    
+    req.user = currentUser
+    
+    next()
+    
+})
 
+exports.authorizeUser =([...user])=>((req,res,next)=>{
+    const {role} = req.user
+    console.log(user)
+    if(!user.includes(role)){
+        return next(new AppError('User is not Authorized to perform such an action',401)) 
+    }
     next()
 })
 
-
-
-exports.authorizeUser = (...roles)=> ((req,res,next) =>{
-  
-        // get current user role
-        
-        const currentUserRole = req.user.role
-        
+exports.forgotPassword = asyncErrorCatcher(async (req,res,next) =>{
+    const {email} = req.body
     
-        if (!roles.includes(currentUserRole)){
-            return next(new AppError('sorry you are not authorized to perform such action',403))
-        }
-        
-         
-        //throw error or return to next middleware  
-        
-        next()
-        
-        
-        
-    })
+    const userWithEmail = await UserModel.find({email})
+    
+    if(!email) return next(new AppError('Sorry No user with that email exist, please create an account',404))
+    
+    
+     
+    
+    
+    
+    
+})

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
     
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required : [true,"The password field is required"],
         minlength: 8,
-        select:false   
+        select:false
     },
     confirmPassword : {
         type: String,
@@ -32,40 +33,52 @@ const userSchema = new mongoose.Schema({
             message: "doesnt match entered password "
         
     }},
-    passwordChangedAt : Date,
+    passwordChangedAt:Date,
     role:{
         type:String,
-        default : "user",
-        enum : ["admin", "user","tour-guide","lead-tour-guide"]
+        enum:["admin",'user','tour-guide'],
+        required:[true,'Please assign a role to the user']
+    },
+    resetToken : String
+})
+
+userSchema.pre("save",async function(next){
+    
+    if(!this.isModified('password')) return;
+    
+    const encryptedPassword =await bcrypt.hash(this.password,12);
+    
+    this.password = encryptedPassword;
+    
+    this.confirmPassword = undefined;
+    
+next()
+})
+
+userSchema.methods.comparePasswords = async (newPassword,originalPassword) => await bcrypt.compare(newPassword,originalPassword);
+
+userSchema.methods.checkPasswordUpdate = (JWTTimeStamp)=>{
+    
+    if(this.passwordChangedAt){
+        const passwordChangedAtTimeStamp = parseInt(this.passwordChangedAt.getTime()/1000,10)
+        
+        return JWTTimeStamp < passwordChangedAtTimeStamp 
     }
-})
-
-
-//define a document middleware that takes the password of the user and encrypts it before saving it to the database
-
-userSchema.pre('save', async function(next){
     
-    if(!this.isModified) return next();
     
-    this.password = await bcrypt.hash(this.password,12)
-    this.confirmPassword = undefined
-    
-    next()
-    
-})
-
-userSchema.methods.comparePasswords =async function(reqPassword, databasePassword){
-    return await bcrypt.compare(reqPassword, databasePassword)  
+    return false 
 }
 
-userSchema.methods.comparePasswordDates = async function( jsonWebTokenTime){
+userSchema.methods.generateResetToken= async ()=>{
+    
+    const tokenString = crypto.randomBytes(32).toString('hex')
+    
+    this.resetToken = await crypto.createHash('sha25').update(tokenString).digest('hex')
     
     
-    
-    const dateUpdated =  this.passwordChangedAt.getTime()/1000
-    return jsonWebTokenTime < dateUpdated
 }
+
 
 const UserModel = mongoose.model('User',userSchema)
 
-module.exports = UserModel
+module.exports = UserModel 

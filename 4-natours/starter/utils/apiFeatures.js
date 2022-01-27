@@ -42,7 +42,7 @@ class ApiFeatures {
     fieldLimiting(){
     
         if(this.queryString.fields){
-            const fieldString = this.queryString.fields.split(',').join(' ') 
+            const fieldString = this.queryString.fields.split(',').join('') 
             this.query = this.query.select(fieldString)
         }
         else {

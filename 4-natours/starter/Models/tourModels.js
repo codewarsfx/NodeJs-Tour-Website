@@ -92,7 +92,7 @@ tourSchema.pre(/^find/, function(next){
     this.find({secretTours:{$ne:true}})
     
     next()
-    
+     
     
 })
 

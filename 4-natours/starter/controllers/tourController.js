@@ -4,7 +4,7 @@
 const Tour = require('../Models/tourModels')
 const ApiFeatures = require('../utils/apiFeatures')
 const asyncErrorCatcher = require('../utils/AsyncErrorCatcher')
-
+const AppError = require('../utils/appError')
 
 
 
@@ -45,8 +45,13 @@ exports.createTour = asyncErrorCatcher(async (req,res,next) => {
 
 
 
-exports.getTour =asyncErrorCatcher(async (req, res)=>{
-    const TourData = await Tour.find({"_id":req.params.id})
+exports.getTour =asyncErrorCatcher(async (req, res,next)=>{
+    const TourData = await Tour.findById(req.params.id)
+   
+    if(!TourData){
+        return next(new AppError("sorry the tour with that ID does not exist",404))
+    }
+    
     res.status(200).json({
         "message":"success",
         "data": TourData
@@ -55,7 +60,7 @@ exports.getTour =asyncErrorCatcher(async (req, res)=>{
 
 exports.updateTour =asyncErrorCatcher(async (req,res) =>{
         const updatedTour= await Tour.findByIdAndUpdate(req.params.id,req.body,{
-           new:true,   
+           new:true,    
         })  
         res.status(201).json({
             "message": "success",
@@ -64,11 +69,11 @@ exports.updateTour =asyncErrorCatcher(async (req,res) =>{
 })
 
 exports.deleteTour=asyncErrorCatcher(async (req,res)=>{
-            const deletedTour = await Tour.findByIdAndDelete(req.params.id);
+    
+            await Tour.findByIdAndDelete(req.params.id);
             
-            res.status(200).json({
+            res.status(204).json({
                 "message": "success",
-                data: deletedTour
             })
 })
 

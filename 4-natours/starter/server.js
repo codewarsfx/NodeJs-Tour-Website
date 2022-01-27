@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const app = require('./app');
 
 
-const db = process.env.DATABASE.replace('<PASSWORD>',process.env.DATABASE_PASSWORD)
+const db = process.env.DATABASE.replace('<password>',process.env.DATABASE_PASSWORD)
 
 
 //catching synchronous errors around th

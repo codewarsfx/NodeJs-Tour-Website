@@ -25,11 +25,11 @@ const handleProductionErrors = (err,res) => {
                status:"fail"
           }) 
      }
-}
+} 
 
 const handleCastErrors = (error) =>{
    const message = `sorry  ${error.path} : ${error.value} is invalid`
-     return new AppError(message, 404)
+     return new AppError(message, 404) 
 }
 
 
@@ -50,20 +50,19 @@ const handleValidationError = (error)=>{
      
      return new AppError(`The following Validation problems occured;  ${message.join(".  ")}`,500)
      
-}
+}  
 
+const handleInvalidJwtError = ()=> new AppError('Unauthorized access; Invalid token ', 401);
 
-const handleJsonWebTokenError = ()=> new AppError('Invalid Token . Please try logging in again', 401)
-     
-const handleJsonWebTokenExpired = ()=> new AppError('Token for this user is Expired',401 )
-
+const handleTokenExpiredrrors = ()=> new AppError('Error, Expired Token. Please login again',401)
 
 
 
 
 //Global handling error middleware
 module.exports = (error,req,res,next) =>{
-     error.statusCode = error.statusCode || 500
+
+     error.statusCode = error.statusCode  || 500
      error.status = error.status || "error"
      
      if(process.env.NODE_ENV === "development"){
@@ -82,14 +81,11 @@ module.exports = (error,req,res,next) =>{
                newError = handleValidationError(error)
           }
           if(error.name === "JsonWebTokenError"){
-               newError = handleJsonWebTokenError()
+               newError = handleInvalidJwtError()
           }
           if(error.name === "TokenExpiredError"){
-               newError = handleJsonWebTokenExpired()
+               newError = handleTokenExpiredrrors()
           }
-          
-          
-          
           
           handleProductionErrors(newError,res)
      }
