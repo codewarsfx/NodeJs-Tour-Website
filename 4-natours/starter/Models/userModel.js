@@ -39,7 +39,8 @@ const userSchema = new mongoose.Schema({
         enum:["admin",'user','tour-guide'],
         required:[true,'Please assign a role to the user']
     },
-    resetToken : String
+    resetToken : String,
+    resetTokenExpires: Date
 })
 
 userSchema.pre("save",async function(next){
@@ -55,7 +56,7 @@ userSchema.pre("save",async function(next){
 next()
 })
 
-userSchema.methods.comparePasswords = async (newPassword,originalPassword) => await bcrypt.compare(newPassword,originalPassword);
+userSchema.methods.comparePasswords = async  (newPassword,originalPassword) => await bcrypt.compare(newPassword,originalPassword);
 
 userSchema.methods.checkPasswordUpdate = (JWTTimeStamp)=>{
     
@@ -69,12 +70,13 @@ userSchema.methods.checkPasswordUpdate = (JWTTimeStamp)=>{
     return false 
 }
 
-userSchema.methods.generateResetToken= async ()=>{
+userSchema.methods.generateResetToken= function (){
     
     const tokenString = crypto.randomBytes(32).toString('hex')
-    
-    this.resetToken = await crypto.createHash('sha25').update(tokenString).digest('hex')
-    
+    this.resetToken =  crypto.createHash('sha256').update(tokenString).digest('hex')
+
+    this.resetTokenExpires = Date.now() +10 * 60 *1000
+    return tokenString
     
 }
 
