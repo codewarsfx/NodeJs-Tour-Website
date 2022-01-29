@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 
 const asyncErrorCatcher = require('../utils/AsyncErrorCatcher')
 const UserModel = require('../Models/userModel')
@@ -108,6 +109,8 @@ exports.authorizeUser =([...user])=>((req,res,next)=>{
 
 
 
+//forgot password functionality
+
 exports.forgotPassword = asyncErrorCatcher( async (req,res,next) => {
     const {email} = req.body
     
@@ -117,7 +120,7 @@ exports.forgotPassword = asyncErrorCatcher( async (req,res,next) => {
    const userToken = userWithEmail.generateResetToken()
    await userWithEmail.save({validateBeforeSave:false})
    
-   const resetPasswordUrl = `${req.protocol}://${req.get('host')}/app/vi/users/${userToken}`
+   const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${userToken}`
    
    try {
        await sendEmail({
@@ -141,3 +144,35 @@ exports.forgotPassword = asyncErrorCatcher( async (req,res,next) => {
    }
    
 })   
+
+
+
+
+// reset password functionality
+exports.resetPassword = asyncErrorCatcher(
+    async (req,res,next)=>{
+        
+        const resetTokenUrl = crypto.createHash('sha256').update(req.params.token).digest('hex');
+        
+        // find user with the token and make sure the token hasnt expired yet 
+        
+        const userWthResetToken = await UserModel.findOne({resetToken:resetTokenUrl,resetTokenExpires:{$gt: Date.now()}})
+        
+        if(!userWthResetToken) return next(new AppError('Invalid password reset token', 400))
+        
+        //change the password and confirmpassword fields 
+        userWthResetToken.password = req.body.password
+        userWthResetToken.confirmPassword= req.body.confirmPassword
+        userWthResetToken.resetToken = undefined
+        userWthResetToken.resetTokenExpires = undefined 
+        
+        await userWthResetToken.save()
+        
+        
+      const  jwtToken = await signJWT(userWthResetToken._id)
+        res.status(201).json({
+            message:"success",
+            jwtToken
+        })   
+    }
+)
