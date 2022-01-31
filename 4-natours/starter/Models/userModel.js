@@ -40,7 +40,11 @@ const userSchema = new mongoose.Schema({
         required:[true,'Please assign a role to the user']
     },
     resetToken : String,
-    resetTokenExpires: Date
+    resetTokenExpires: Date,
+    active:{
+        type: Boolean,
+        default: true
+    }
 })
 
 userSchema.pre("save",async function(next){
@@ -63,9 +67,16 @@ userSchema.pre("save",function(next){
     this.passwordChangedAt = Date.now() - 1000
     next()
 } 
- 
-
 )
+
+userSchema.pre(/^find/,function(next){
+    
+    this.find({active:{$ne:false}})
+    
+    next()
+    
+})
+
 
 userSchema.methods.comparePasswords = async  (newPassword,originalPassword) => await bcrypt.compare(newPassword,originalPassword);
 
@@ -93,6 +104,9 @@ userSchema.methods.generateResetToken= function (){
     return tokenString
     
 }
+
+
+
 
 
 const UserModel = mongoose.model('User',userSchema)

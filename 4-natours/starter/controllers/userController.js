@@ -10,7 +10,6 @@ const cleanUpRequestBody = (body,...allowedfields)=>{
         if (allowedfields.includes(el)) newBody[el] =body[el]
         
     })
-    console.log(newBody,allowedfields)
     return newBody
     
 }
@@ -50,6 +49,8 @@ exports.updateSelf = AsyncErrorCatcher(async (req,res,next)=>{
 })
 
 
+
+
 exports.createUser = (req, res) =>{
         res.status(201).json({
         "status": "success",
@@ -64,12 +65,15 @@ exports.updateUser = (req, res) =>{
     })  
 }
 
-exports.deleteUser = (req, res) =>{
-            res.status(204).json({
-        "status": "success",
-        "data":"ok"
-    })  
-}
+exports.deleteUser = AsyncErrorCatcher(async (req,res,next)=>{
+    
+    // The delete user controller doesnt delete the user from the database it only finds the user and sets it's active field to false
+    await User.findByIdAndUpdate(req.user._id,{active:false})
+    res.status(204).json({
+        message:"User deleted",
+        data:null
+    })
+})
 
 exports.getUser = (req, res) =>{
                res.status(200).json({
