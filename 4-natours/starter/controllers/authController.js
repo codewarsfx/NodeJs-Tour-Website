@@ -38,7 +38,7 @@ exports.login = asyncErrorCatcher( async (req,res,next)=>{
     // check if there is an email and password 
     if(!email || !password) return next(new AppError("please include an email and password",401));
     //find the user with that email and confirm the password is the same as
-    const userWithEmail = await UserModel.findOne({email}).select('+password')
+    const userWithEmail = await UserModel.find({email}).select('+password')
     const passwordCorrect = await userWithEmail.comparePasswords(password,userWithEmail.password)
 
     if(!userWithEmail || !passwordCorrect)return next(new AppError('you have entered an incorrect email or password ',401));
@@ -110,7 +110,6 @@ exports.authorizeUser =([...user])=>((req,res,next)=>{
 
 
 //forgot password functionality
-
 exports.forgotPassword = asyncErrorCatcher( async (req,res,next) => {
     const {email} = req.body
     
@@ -176,3 +175,8 @@ exports.resetPassword = asyncErrorCatcher(
         })   
     }
 )
+
+
+
+
+
