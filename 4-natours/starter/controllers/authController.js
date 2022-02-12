@@ -7,21 +7,41 @@ const AppError = require('../utils/appError')
 const sendEmail = require('../utils/email')
 
 //private function to sign JWTs
-const signJWT = (id) => jwt.sign({id},process.env.SIGNATURE,{
+const signJWT = async (id,response,statusCode,userData) => {
+    
+    
+    const cookieOptions ={
+        expires:new Date(Date.now() + process.env.JWT_TOKEN_EXPIRESIN * 24 * 60 * 60 * 1000),
+        httpOnly:true
+    }
+    
+    if(process.env.NODE_ENV === "production"){
+        cookieOptions.secure = true 
+    }  
+    
+ const jwtToken = await jwt.sign({id},process.env.SIGNATURE,{
         expiresIn:process.env.EXPIRY_DATE
     })
+    
+    if(userData) userData.password = undefined;
+    
+    response.cookie('jwt',jwtToken,cookieOptions)
+    response.status(statusCode).json({
+        message:"success",
+        jwtToken,
+        userData
+    })
+}
 
 
 //signup functionality
 exports.signup = asyncErrorCatcher(async (req,res)=>{
     const userData = await UserModel.create(req.body)
     
-    const  jwtToken = await signJWT(userData._id)
-    res.status(201).json({
-        message:"success",
-        userData,
-        jwtToken
-    })
+    signJWT(userData._id,res,201,userData)
+    
+    
+    
     
 })
 
@@ -38,13 +58,14 @@ exports.login = asyncErrorCatcher( async (req,res,next)=>{
     // check if there is an email and password 
     if(!email || !password) return next(new AppError("please include an email and password",401));
     //find the user with that email and confirm the password is the same as
-    const userWithEmail = await UserModel.find({email}).select('+password')
-    const passwordCorrect = await userWithEmail.comparePasswords(password,userWithEmail.password)
-
-    if(!userWithEmail || !passwordCorrect)return next(new AppError('you have entered an incorrect email or password ',401));
-    const jwtToken  = await signJWT(userWithEmail._id)
+    const userWithEmail = await UserModel.findOne({email}).select('+password')
+    
+    
+    const passwordCorrect = await userWithEmail.comparePasswords(req.body.password,userWithEmail.password)
+  
     //if the password isnt correct return error .if it is send a jwt token to the client 
-    res.status(200).json({message:'success',jwtToken})
+    if(!userWithEmail || !passwordCorrect)return next(new AppError('you have entered an incorrect email or password ',401));
+    signJWT(userWithEmail._id,res,200,userWithEmail)
 })
 
 
@@ -84,8 +105,7 @@ exports.protect = asyncErrorCatcher(async (req,res,next)=>{
     
     req.user = currentUser
     
-    next()
-    
+    next()  
 })
 
 
@@ -168,11 +188,7 @@ exports.resetPassword = asyncErrorCatcher(
         await userWthResetToken.save()
         
         
-      const  jwtToken = await signJWT(userWthResetToken._id)
-        res.status(201).json({
-            message:"success",
-            jwtToken
-        })   
+     signJWT(userWthResetToken._id,res,200)  
     }
 )
 
