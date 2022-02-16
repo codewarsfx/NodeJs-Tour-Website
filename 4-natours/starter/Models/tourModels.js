@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify')
+const User = require('./userModel')
 
 // Schema and model for tour data
 const tourSchema = new mongoose.Schema({
@@ -86,7 +87,8 @@ const tourSchema = new mongoose.Schema({
             day:Number   
         }
 }
-    ]  
+    ],
+    guides:Array
 },{
     toJSON:{
         virtuals:true
@@ -97,6 +99,15 @@ const tourSchema = new mongoose.Schema({
 })
 
 // virtual properties are used to represent properties in our schema that we dont really need to save in our database ..u just need them created on the fly using database field values but dont need to persist them to your database
+
+tourSchema.pre('save',async function(next){
+    
+    const guidesPromise = this.guides.map(async (id) =>await User.findById(id))
+    
+     this.guides=await Promise.all(guidesPromise)
+   
+    next()
+})
 
 tourSchema.virtual('weeklyDuration').get(function(){
    return  this.duration / 7
