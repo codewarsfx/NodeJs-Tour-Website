@@ -59,9 +59,34 @@ const tourSchema = new mongoose.Schema({
         type:[String],
         required:[true,'an array of images is required']
     },
-    difficulty: String
-    
-    
+    difficulty: String,
+    startLocation:{
+        type:{
+            type: String,
+            enum:["Point"],
+            default:"Point",
+        },
+        coordinates:{
+            type:[Number],
+            description:String,
+            address:String,   
+        }
+    },
+    locations:[
+{
+    type:{
+            type: String,
+            enum:["Point"],
+            default:"Point"
+    },
+    coordinates: {
+            type:[Number],
+            description:String,
+            address:String, 
+            day:Number   
+        }
+}
+    ]  
 },{
     toJSON:{
         virtuals:true
