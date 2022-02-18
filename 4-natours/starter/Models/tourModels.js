@@ -88,7 +88,12 @@ const tourSchema = new mongoose.Schema({
         }
 }
     ],
-    guides:Array
+    guides:[
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: User 
+        }
+    ]
 },{
     toJSON:{
         virtuals:true
@@ -98,23 +103,22 @@ const tourSchema = new mongoose.Schema({
     }
 })
 
-// virtual properties are used to represent properties in our schema that we dont really need to save in our database ..u just need them created on the fly using database field values but dont need to persist them to your database
 
-tourSchema.pre('save',async function(next){
+// tourSchema.pre('save',async function(next){
     
-    const guidesPromise = this.guides.map(async (id) =>await User.findById(id))
+//     const guidesPromise = this.guides.map(async (id) =>await User.findById(id))
     
-     this.guides=await Promise.all(guidesPromise)
+//      this.guides=await Promise.all(guidesPromise)
    
-    next()
-})
+//     next()
+// })
 
+// virtual properties are used to represent properties in our schema that we dont really need to save in our database ..u just need them created on the fly using database field values but dont need to persist them to your database
 tourSchema.virtual('weeklyDuration').get(function(){
    return  this.duration / 7
 })
 
 //the doucment middleware represents a function that is run before the creatae or save method of a mongoose model is run..this mean u can actually perform some actions before the document is saved
-
 tourSchema.pre('save',function(next){
     this.slug= slugify(this.name,{
         lowercase:true
@@ -123,6 +127,21 @@ tourSchema.pre('save',function(next){
     next()
 })
 
+
+// query selector to populate guides arraay during query 
+tourSchema.pre(/^find/, function(next){
+    this.populate({
+        path: "guides",
+        select:"-__v "
+        
+    })
+    
+    next()
+})
+
+
+
+//query selector to filer out tours marked as secret 
 tourSchema.pre(/^find/, function(next){
     
     this.find({secretTours:{$ne:true}})
