@@ -46,7 +46,9 @@ exports.createTour = asyncErrorCatcher(async (req,res,next) => {
 
 
 exports.getTour =asyncErrorCatcher(async (req, res,next)=>{
-    const TourData = await Tour.findById(req.params.id)
+    const TourData = await Tour.findById(req.params.id).populate({
+        path:"reviews"
+    })
    
     if(!TourData){
         return next(new AppError("sorry the tour with that ID does not exist",404))

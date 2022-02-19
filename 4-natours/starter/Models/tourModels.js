@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify')
-const User = require('./userModel')
+
 
 // Schema and model for tour data
 const tourSchema = new mongoose.Schema({
@@ -91,7 +91,7 @@ const tourSchema = new mongoose.Schema({
     guides:[
         {
             type: mongoose.Schema.ObjectId,
-            ref: User 
+            ref: "User" 
         }
     ]
 },{
@@ -118,12 +118,19 @@ tourSchema.virtual('weeklyDuration').get(function(){
    return  this.duration / 7
 })
 
+
+//virtual property to populate the tour object with reviews 
+tourSchema.virtual('reviews', { 
+    ref: "Review",
+    foreignField:"tour",
+    localField:"_id"
+})
+
 //the doucment middleware represents a function that is run before the creatae or save method of a mongoose model is run..this mean u can actually perform some actions before the document is saved
 tourSchema.pre('save',function(next){
     this.slug= slugify(this.name,{
         lowercase:true
     })
-    
     next()
 })
 
@@ -135,7 +142,6 @@ tourSchema.pre(/^find/, function(next){
         select:"-__v "
         
     })
-    
     next()
 })
 

@@ -10,6 +10,7 @@ const preventParameterPollution = require('hpp')
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError')
+const reviewRouter = require('./routes/reviewRoutes')
 const errorController = require('./controllers/errorController')
 
 
@@ -59,6 +60,7 @@ if(process.env.NODE_ENV === 'development'){
 //routes
 app.use('/api/v1/tours',tourRouter)
 app.use('/api/v1/users',userRouter)
+app.use('/api/v1/reviews',reviewRouter)
 app.all('*',(req, res, next) =>{
      
      next(new AppError(`Sorry the resource ${req.originalUrl} does not exist`,404))

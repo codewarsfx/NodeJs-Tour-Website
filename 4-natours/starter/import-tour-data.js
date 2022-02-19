@@ -4,14 +4,15 @@ require('dotenv').config({ path: `${__dirname}/../.env`});
 const fs = require('fs');
 const mongoose = require('mongoose');
 const Tour  = require('./Models/tourModels')
+const Review = require('./Models/reviewModel')
 
 
 const db = process.env.DATABASE.replace('<password>',process.env.DATABASE_PASSWORD)
-const tourData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours.json`))
+const tourData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/reviews.json`))
 
 const addToursToDatabase = async () => {
         try{
-             await Tour.insertMany(tourData)
+             await Review.insertMany(tourData)
              
              process.exit(1)
         }
@@ -23,7 +24,7 @@ const addToursToDatabase = async () => {
 const deleteAllTours = async ()=>{
     try{
         
-        await Tour.deleteMany()
+        await Review.deleteMany()
         process.exit(1)
         
     }
