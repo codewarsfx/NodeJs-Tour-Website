@@ -7,11 +7,19 @@ const AsyncErrorCatcher = require('../utils/AsyncErrorCatcher')
 
 
 exports.getReviews= asyncErrorCatcher(async (req,res,next)=>{
-     const ReviewsQueryObject = new ApiFeatures(Review.find(),req.query)
+    
+    let tourObject = {}
+    if(req.params.tourid) tourObject = {
+        tour:req.params.tourid
+    }
+    
+    
+     const ReviewsQueryObject = new ApiFeatures(Review.find(tourObject),req.query)
                                                                     .filter()
                                                                     .sort()
                                                                     .fieldLimiting()
                                                                     .pagination()
+                                                            
      const ReviewsData = await ReviewsQueryObject
     //send the response 
     res.status(200).json({
@@ -23,6 +31,8 @@ exports.getReviews= asyncErrorCatcher(async (req,res,next)=>{
 )
 
 exports.createReview = asyncErrorCatcher(async (req,res,next)=>{
+    if(!req.body.tour)req.body.tour= req.params.tourid;
+    if(!req.body.user)req.body.user= req.user.id
     const review = await Review.create(req.body)
     res.status(201).json({
         "message":"success",

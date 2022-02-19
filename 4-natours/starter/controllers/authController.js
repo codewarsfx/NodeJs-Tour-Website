@@ -59,12 +59,9 @@ exports.login = asyncErrorCatcher( async (req,res,next)=>{
     if(!email || !password) return next(new AppError("please include an email and password",401));
     //find the user with that email and confirm the password is the same as
     const userWithEmail = await UserModel.findOne({email}).select('+password')
-    
-    
-    const passwordCorrect = await userWithEmail.comparePasswords(req.body.password,userWithEmail.password)
   
     //if the password isnt correct return error .if it is send a jwt token to the client 
-    if(!userWithEmail || !passwordCorrect)return next(new AppError('you have entered an incorrect email or password ',401));
+    if(!userWithEmail || !(await userWithEmail.comparePasswords(req.body.password,userWithEmail.password)))return next(new AppError('you have entered an incorrect email or password ',401));
     signJWT(userWithEmail._id,res,200,userWithEmail)
 })
 
@@ -117,7 +114,6 @@ exports.protect = asyncErrorCatcher(async (req,res,next)=>{
 // this function gives users the ability to perform  certain actions based on the role they posses 
 exports.authorizeUser =([...user])=>((req,res,next)=>{
     const {role} = req.user
-    console.log(user)
     if(!user.includes(role)){
         return next(new AppError('User is not Authorized to perform such an action',401)) 
     }
