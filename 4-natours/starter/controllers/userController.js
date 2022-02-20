@@ -1,6 +1,7 @@
 const AsyncErrorCatcher = require('../utils/AsyncErrorCatcher');
 const AppError = require('../utils/appError')
 const User = require('../Models/userModel')
+const controllerFactory = require('./ControllerFactory')
 
 
 const cleanUpRequestBody = (body,...allowedfields)=>{
@@ -15,26 +16,9 @@ const cleanUpRequestBody = (body,...allowedfields)=>{
 }
 
 
-exports.getUsers = AsyncErrorCatcher(
-    async (req, res,next)=>{
-        
-        const users = await User.find()
-        
-        
-        res.status(200).json({
-            "status" :"success",
-            "data" : users
-        })
-        
-        
-    }
-)
-
 exports.updateSelf = AsyncErrorCatcher(async (req,res,next)=>{
-
     //ensure the updates are not password changes 
     if(req.body.password || req.body.confirmPassword) return next(new AppError('You can perform password update on this route use /forgotPassword instead'))
-    
     //perform updates to user updates but only to specific field
     const cleanedRequestBody = cleanUpRequestBody(req.body, "name","email")
     const userUpdateObject = await User.findByIdAndUpdate(req.user._id,cleanedRequestBody,{
@@ -48,24 +32,7 @@ exports.updateSelf = AsyncErrorCatcher(async (req,res,next)=>{
     
 })
 
-
-
-
-exports.createUser = (req, res) =>{
-        res.status(201).json({
-        "status": "success",
-        "data":"ok"
-    })  
-}
-
-exports.updateUser = (req, res) =>{
-            res.status(200).json({
-        "status": "success",
-        "data":"ok"
-    })  
-}
-
-exports.deleteUser = AsyncErrorCatcher(async (req,res,next)=>{
+exports.userDeleteSelf = AsyncErrorCatcher(async (req,res,next)=>{
     
     // The delete user controller doesnt delete the user from the database it only finds the user and sets it's active field to false
     await User.findByIdAndUpdate(req.user._id,{active:false})
@@ -75,9 +42,14 @@ exports.deleteUser = AsyncErrorCatcher(async (req,res,next)=>{
     })
 })
 
-exports.getUser = (req, res) =>{
-               res.status(200).json({
-        "status": "success",
-        "data":"ok"
-    }) 
-}
+
+
+
+exports.createUser = (req, res,next) => next(new AppError("use the /signup route to create new users",500))
+exports.getUsers = controllerFactory.getAll(User)
+exports.getUser = controllerFactory.getOne(User)
+exports.updateUser = controllerFactory.updateOne(User)
+//admin delete user permanently from database 
+exports.deleteUser = controllerFactory.deleteOne(User)
+
+
