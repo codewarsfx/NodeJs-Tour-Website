@@ -8,8 +8,11 @@ const Router = express.Router({
 })
 
 
-Router.route('/').get(authController.protect,reviewController.getReviews).post(authController.protect,authController.authorizeUser(['user']),reviewController.setBody,reviewController.createReview)
-Router.route('/:id').get(reviewController.getReview).delete(reviewController.deleteReview).patch(reviewController.updateReview)
+Router.use(authController.protect)
+
+
+Router.route('/').get(reviewController.getReviews).post(authController.authorizeUser(['user']),reviewController.setBody,reviewController.createReview)
+Router.route('/:id').get(reviewController.getReview).delete(authController.authorizeUser(['admin','user']),reviewController.deleteReview).patch(authController.authorizeUser(['admin','user']),reviewController.updateReview)
 
 
 
