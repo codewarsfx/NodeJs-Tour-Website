@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const slugify = require('slugify')
 
+const slugify = require('slugify')
+// const Review = require('./reviewModel')
 
 // Schema and model for tour data
 const tourSchema = new mongoose.Schema({
@@ -13,10 +14,6 @@ const tourSchema = new mongoose.Schema({
     duration:{
         type:Number,
         required:[true,"a duration is required"]
-    },
-    rating: {
-        type:Number,
-        default:4.5
     },
     price: {
         type:Number,
@@ -103,7 +100,11 @@ const tourSchema = new mongoose.Schema({
     }
 })
 
-
+tourSchema.index({
+    price:1,
+    rating: 1,
+    slug: 1
+})
 // tourSchema.pre('save',async function(next){
     
 //     const guidesPromise = this.guides.map(async (id) =>await User.findById(id))

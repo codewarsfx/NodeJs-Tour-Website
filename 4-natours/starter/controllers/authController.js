@@ -83,7 +83,6 @@ exports.protect = asyncErrorCatcher(async (req,res,next)=>{
     
     // 1. check if the token exists in the request header
     if(!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) return next(new AppError('Please login to receive authorization token',401));
-    
     const token = req.headers.authorization.split(' ')[1]
     
     //2. verify the token and get it's payload. two kind of errors can occur in the verification stage

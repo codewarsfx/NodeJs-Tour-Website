@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+const Tour = require('./tourModels')
+
 
 
 
@@ -29,6 +31,77 @@ const reviewSchema = new mongoose.Schema({
         required:[true,"review must belong to a user"]
     }
 })
+
+
+reviewSchema.index(
+    {
+        user: 1,
+        tour: 1
+    }
+    ,{
+        unique: true 
+    }
+)
+
+
+reviewSchema.statics.getReviewStats =async  function (tourID){
+    //an aggregation pipeline that calculates the average rating for a particular tour and the number of reviews.
+    const stats = await this.aggregate([{
+        $match:{
+            tour: tourID
+        },
+    },{
+        $group:{
+            _id : '$tour',
+            ratingsAverage : {
+                $avg:'$rating',            
+            },
+            ratingsQuantity:{
+                $sum: 1
+            }
+        }
+    }])
+
+    if(stats){
+         await Tour.findByIdAndUpdate(tourID,{
+         ratingsAverage: Math.round(stats[0].ratingsAverage * 10) / 10,
+         ratingsQuantity:stats[0].ratingsQuantity
+    })
+    }
+    else{
+          await Tour.findByIdAndUpdate(tourID,{
+         ratingsAverage: 4.5,
+         ratingsQuantity:0
+    })
+    }  
+}
+
+
+reviewSchema.post('save', function(){
+    this.constructor.getReviewStats(this.tour) 
+    
+})
+
+
+reviewSchema.pre(/^findOneAnd/,async function(next){
+    this.r = await this.findOne()
+    next()
+})
+
+
+reviewSchema.post(/^findOneAnd/, async function(){
+    
+    
+ await  this.r.constructor.getReviewStats(this.r.tour)
+    
+})
+
+
+
+
+
+
+
 
 
 reviewSchema.pre(/^find/,function(next){
