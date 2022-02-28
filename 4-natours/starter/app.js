@@ -1,3 +1,4 @@
+// packages
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet')
@@ -5,8 +6,11 @@ const rateLimiter = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
 const xssClean = require('xss-clean')
 const preventParameterPollution = require('hpp')
+const path = require('path')
 
 
+
+//internal project modules
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError')
@@ -14,12 +18,22 @@ const reviewRouter = require('./routes/reviewRoutes')
 const errorController = require('./controllers/errorController')
 
 
-
+ 
 
 const app = express();
 
+//setting up the pug template 
+app.set('view engine','pug')
+app.set('views',path.join(__dirname,'views'))
+
+
+
+app.use(express.static(path.join(__dirname,'public')))
+
+
 //set security headers 
 app.use(helmet())
+
 
 
 // limit the number of requests
@@ -56,8 +70,11 @@ if(process.env.NODE_ENV === 'development'){
      app.use(morgan("dev"))
 }
 
-
+ 
 //routes
+app.get('/',(req,res)=>{
+     res.status(200).render('base')
+})
 app.use('/api/v1/tours',tourRouter)
 app.use('/api/v1/users',userRouter)
 app.use('/api/v1/reviews',reviewRouter)

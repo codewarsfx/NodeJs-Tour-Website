@@ -105,6 +105,9 @@ tourSchema.index({
     rating: 1,
     slug: 1
 })
+tourSchema.index({
+    startLocation: "2dsphere"
+})
 // tourSchema.pre('save',async function(next){
     
 //     const guidesPromise = this.guides.map(async (id) =>await User.findById(id))

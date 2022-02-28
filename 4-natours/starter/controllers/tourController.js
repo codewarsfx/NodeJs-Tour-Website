@@ -22,6 +22,57 @@ exports.getTour = ControllerFactory.getOne(Tour,"reviews")
 exports.deleteTour = ControllerFactory.deleteOne(Tour)
 exports.updateTour = ControllerFactory.updateOne(Tour)
 
+// ('/location-within/:distance/center/:latlng/unit/:mi
+exports.getLocationsWithinRadius = asyncErrorCatcher(async (req,res)=>{
+    
+    const {distance,latlng,mi} = req.params
+    const [lat,lng] = latlng.split(",")
+    
+   
+    const radius = mi === "mi" ? distance / 3963.2 : distance /6378.1
+    const tourData = await Tour.find({
+       startLocation: {
+           $geoWithin :{
+               $centerSphere :[[lng,lat],radius]
+           }
+       }
+    })
+    
+    res.status(200).json({
+        "status": "Ok",
+        "data":{
+            length:tourData.length,
+            "data": tourData
+        }
+    })  
+    
+})
+
+
+//geospatial aggregation pipeline for calculating distance of each location from a given point
+
+// exports.calcDistanceFrom = asyncErrorCatcher(async (req,res)=>{
+     
+// const {latlang,mi} = req.params
+// const [lat, long] = latlang.split(',')
+    
+
+// const tourDistanceData = Tour.aggregate([{
+//     $geoNear :{
+        
+//     }
+// }])
+
+
+// res.status(200).json({
+//     "status":"ok",
+//     data:{
+//         data:tourDistanceData
+//     }
+// })   
+// }
+// )
+
 exports.aggregationPipelineForAVerages = asyncErrorCatcher(async (req,res) => {
         const stats =await Tour.aggregate([
             {

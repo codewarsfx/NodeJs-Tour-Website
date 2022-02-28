@@ -12,6 +12,8 @@ Router.use("/:tourid/reviews", reviewRouter)
 Router.route('/top5-most-expesive-tours').get(tourController.aliaseController, tourController.getTours)
 Router.route('/get-busiest-month/:year').get(authController.protect,authController.authorizeUser(['admin','tour-guide','guide']),tourController.aggregateForBusiestMonth)
 Router.route('/get-tour-averages').get(tourController.aggregationPipelineForAVerages)
+Router.route('/location-within/:distance/center/:latlng/unit/:mi').get(tourController.getLocationsWithinRadius)
+Router.route('distanceFrom/center/:latlng/unit/:mi').get(tourController.calcDistanceFrom)
 
 
 Router.route('/').get(tourController.getTours).post(authController.protect,authController.authorizeUser(['admin','lead-guide']),tourController.createTour)
