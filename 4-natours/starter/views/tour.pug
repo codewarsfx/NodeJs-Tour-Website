@@ -1,0 +1,91 @@
+extends base 
+mixin heading-box-detail(img,label,date)
+    .overview-box__detail
+                            svg.overview-box__icon
+                                use(xlink:href=`/img/icons.svg#${img}`)
+                            span.overview-box__label=label
+                            span.overview-box__text=date
+mixin reviewCard(review)
+     .reviews__card
+                .reviews__avatar
+                    img.reviews__avatar-img(src=`/img/users/${review.user.photo}`, alt=`${review.user.name}`)
+                    h6.reviews__user=review.user.name
+                p.reviews__text= review.review
+                .reviews__rating
+                    each rating in [1,2,3,4,5]
+                        -const status = review.rating >= rating? 'active' : 'inactive'
+                        svg.reviews__star.reviews__star--active
+                            use(xlink:href='/img/icons.svg#icon-star' class=`reviews__star--${status}`)
+block content
+    section.section-header
+        .header__hero
+            .header__hero-overlay &nbsp;
+            img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt='Tour 5')
+
+        .heading-box
+            h1.heading-primary
+                span=tour.name
+            .heading-box__group
+                .heading-box__detail
+                    svg.heading-box__icon
+                        use(xlink:href='/img/icons.svg#icon-clock')
+                    span.heading-box__text=`${tour.duration} days `
+                .heading-box__detail
+                    svg.heading-box__icon
+                        use(xlink:href='/img/icons.svg#icon-map-pin')
+                    span.heading-box__text=tour.startLocation.description
+    section.section-description
+        .overview-box
+            div
+                .overview-box__group
+                    h2.heading-secondary.ma-bt-lg Quick facts
+                    -const date= new Date(tour.startDates[0]).toLocaleDateString('en-EN',{year:"numeric",month:"long"})
+                    +heading-box-detail('icon-calendar','Next date',date)
+                    +heading-box-detail('icon-trending-up',"Difficulty",tour.difficulty)
+                    +heading-box-detail('icon-user',"Participants",tour.maxGroupSize)
+                    +heading-box-detail('icon-star',"Rating",`${tour.ratingsAverage} / 5`)
+
+                .overview-box__group
+                    h2.heading-secondary.ma-bt-lg Your tour guides
+                    .overview-box__detail
+                        img.overview-box__img(src='/img/users/user-19.jpg', alt='Lead guide')
+                        span.overview-box__label Lead guide
+                        span.overview-box__text Steven Miller
+                    .overview-box__detail
+                        img.overview-box__img(src='/img/users/user-18.jpg', alt='Tour guide')
+                        span.overview-box__label Tour guide
+                        span.overview-box__text Lisa Brown
+                    .overview-box__detail
+                        img.overview-box__img(src='/img/users/user-17.jpg', alt='Intern')
+                        span.overview-box__label Intern
+                        span.overview-box__text Max Smith
+
+        .description-box
+            h2.heading-secondary.ma-bt-lg=` About ${tour.name} tour`
+            -const [des1,des2] = tour.description.split('\n')
+            p.description__text= des1
+            p.description__text= des2
+
+    section.section-pictures
+        each img,index in tour.images
+            .picture-box
+                img.picture-box__img(src=`/img/tours/${img}`, alt=`${tour.name}` class=`picture-box__img--${index+1}`)
+
+    section.section-map
+        #map
+
+    section.section-reviews
+        .reviews
+            each review in tour.reviews 
+                +reviewCard(review)
+
+    section.section-cta
+        .cta
+            .cta__img.cta__img--logo
+                img(src='/img/logo-white.png', alt='Natours logo')
+            img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt='The tor photo')
+            img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt='The tour photo')
+            .cta__content
+                h2.heading-secondary What are you waiting for?
+                p.cta__text=`${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
+                button.btn.btn--green.span-all-rows Book tour now!

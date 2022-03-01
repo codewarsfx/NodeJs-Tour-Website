@@ -64,29 +64,25 @@ exports.getLocationsWithinRadius = asyncErrorCatcher(function _callee(req, res) 
     }
   });
 }); //geospatial aggregation pipeline for calculating distance of each location from a given point
-// exports.calcDistanceFrom = asyncErrorCatcher(async (req,res)=>{
-// const {latlang,mi} = req.params
-// const [lat, long] = latlang.split(',')
-// const tourDistanceData = Tour.aggregate([{
-//     $geoNear :{
-//     }
-// }])
-// res.status(200).json({
-//     "status":"ok",
-//     data:{
-//         data:tourDistanceData
-//     }
-// })   
-// }
-// )
 
-exports.aggregationPipelineForAVerages = asyncErrorCatcher(function _callee2(req, res) {
-  var stats;
+exports.calcDistanceFrom = asyncErrorCatcher(function _callee2(req, res) {
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          _context2.next = 2;
+        case "end":
+          return _context2.stop();
+      }
+    }
+  });
+});
+exports.aggregationPipelineForAVerages = asyncErrorCatcher(function _callee3(req, res) {
+  var stats;
+  return regeneratorRuntime.async(function _callee3$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.next = 2;
           return regeneratorRuntime.awrap(Tour.aggregate([{
             $match: {
               ratingsAverage: {
@@ -122,7 +118,7 @@ exports.aggregationPipelineForAVerages = asyncErrorCatcher(function _callee2(req
           }]));
 
         case 2:
-          stats = _context2.sent;
+          stats = _context3.sent;
           res.status(200).json({
             "message": "success",
             "data": stats
@@ -130,19 +126,19 @@ exports.aggregationPipelineForAVerages = asyncErrorCatcher(function _callee2(req
 
         case 4:
         case "end":
-          return _context2.stop();
+          return _context3.stop();
       }
     }
   });
 });
-exports.aggregateForBusiestMonth = asyncErrorCatcher(function _callee3(req, res) {
+exports.aggregateForBusiestMonth = asyncErrorCatcher(function _callee4(req, res) {
   var year, plan;
-  return regeneratorRuntime.async(function _callee3$(_context3) {
+  return regeneratorRuntime.async(function _callee4$(_context4) {
     while (1) {
-      switch (_context3.prev = _context3.next) {
+      switch (_context4.prev = _context4.next) {
         case 0:
           year = req.params.year;
-          _context3.next = 3;
+          _context4.next = 3;
           return regeneratorRuntime.awrap(Tour.aggregate([{
             $unwind: "$startDates"
           }, {
@@ -171,7 +167,7 @@ exports.aggregateForBusiestMonth = asyncErrorCatcher(function _callee3(req, res)
           }]));
 
         case 3:
-          plan = _context3.sent;
+          plan = _context4.sent;
           res.status(200).json({
             "message": "success",
             "data": plan
@@ -179,7 +175,7 @@ exports.aggregateForBusiestMonth = asyncErrorCatcher(function _callee3(req, res)
 
         case 5:
         case "end":
-          return _context3.stop();
+          return _context4.stop();
       }
     }
   });

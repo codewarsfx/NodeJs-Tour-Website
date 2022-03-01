@@ -18,6 +18,8 @@ var preventParameterPollution = require('hpp');
 var path = require('path'); //internal project modules
 
 
+var viewRouter = require('./routes/viewRoutes');
+
 var tourRouter = require('./routes/tourRoutes');
 
 var userRouter = require('./routes/userRoutes');
@@ -56,12 +58,11 @@ app.use(preventParameterPollution({
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan("dev"));
-} //routes
+} //views routes
 
 
-app.get('/', function (req, res) {
-  res.status(200).render('base');
-});
+app.use('/', viewRouter); //api routes
+
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

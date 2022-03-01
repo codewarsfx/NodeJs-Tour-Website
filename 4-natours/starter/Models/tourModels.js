@@ -11,6 +11,7 @@ const tourSchema = new mongoose.Schema({
         required:[true,"a Name is required "],
         trim:true
     },
+    maxGroupSize:Number,
     duration:{
         type:Number,
         required:[true,"a duration is required"]
@@ -63,12 +64,16 @@ const tourSchema = new mongoose.Schema({
             type: String,
             enum:["Point"],
             default:"Point",
+            
         },
         coordinates:{
             type:[Number],
             description:String,
             address:String,   
-        }
+        },
+        description:String,
+        address: String,
+        
     },
     locations:[
 {
@@ -79,10 +84,10 @@ const tourSchema = new mongoose.Schema({
     },
     coordinates: {
             type:[Number],
-            description:String,
-            address:String, 
-            day:Number   
-        }
+        },
+    description:String,
+    address:String, 
+    day:Number   
 }
     ],
     guides:[

@@ -51,7 +51,7 @@ exports.getLocationsWithinRadius = asyncErrorCatcher(async (req,res)=>{
 
 //geospatial aggregation pipeline for calculating distance of each location from a given point
 
-// exports.calcDistanceFrom = asyncErrorCatcher(async (req,res)=>{
+exports.calcDistanceFrom = asyncErrorCatcher(async (req,res)=>{
      
 // const {latlang,mi} = req.params
 // const [lat, long] = latlang.split(',')
@@ -70,8 +70,8 @@ exports.getLocationsWithinRadius = asyncErrorCatcher(async (req,res)=>{
 //         data:tourDistanceData
 //     }
 // })   
-// }
-// )
+}
+)
 
 exports.aggregationPipelineForAVerages = asyncErrorCatcher(async (req,res) => {
         const stats =await Tour.aggregate([

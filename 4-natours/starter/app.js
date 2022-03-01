@@ -11,6 +11,7 @@ const path = require('path')
 
 
 //internal project modules
+const viewRouter = require('./routes/viewRoutes')
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError')
@@ -70,11 +71,12 @@ if(process.env.NODE_ENV === 'development'){
      app.use(morgan("dev"))
 }
 
- 
-//routes
-app.get('/',(req,res)=>{
-     res.status(200).render('base')
-})
+
+//views routes
+app.use('/',viewRouter)
+
+
+//api routes
 app.use('/api/v1/tours',tourRouter)
 app.use('/api/v1/users',userRouter)
 app.use('/api/v1/reviews',reviewRouter)
