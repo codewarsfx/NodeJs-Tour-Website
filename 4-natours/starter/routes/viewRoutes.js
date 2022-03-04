@@ -5,7 +5,9 @@ const Router= express.Router()
 
 
 Router.get('/', viewController.getOverview)
-Router.get('/:slug',viewController.getTour)
+Router.get('/tour/:slug',viewController.getTour)
+
+Router.get('/login', viewController.login)
 
 
 module.exports = Router

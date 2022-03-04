@@ -6,9 +6,12 @@ html
         link(rel='stylesheet' href='css/style.css')
         link(rel='shortcut icon' type='image/png' href='img/favicon.png')
         title Natours | #{title}
+        block head 
     body
         //Header
         include _header
         block content
         //Footer
         include _footer
+        script(src='js/map.js' )
+        script(src='js/login.js' )

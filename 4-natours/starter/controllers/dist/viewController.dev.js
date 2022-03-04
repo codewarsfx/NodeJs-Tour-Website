@@ -29,30 +29,38 @@ exports.getOverview = asyncErrorCatcher(function _callee(req, res) {
     }
   });
 });
-exports.getTour = asyncErrorCatcher(function _callee2(req, res) {
+exports.getTour = asyncErrorCatcher(function _callee2(req, res, next) {
   var tour;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          _context2.next = 2;
+          console.log('hiii ji');
+          _context2.next = 3;
           return regeneratorRuntime.awrap(Tour.findOne({
             slug: req.params.slug
           }).populate({
             path: 'reviews'
           }));
 
-        case 2:
+        case 3:
           tour = _context2.sent;
-          res.status(200).render(path.join(__dirname, '../views/tour'), {
-            title: "Tour Details",
+          res.status(200).render('tour', {
+            title: "".concat(tour.name, " Tour"),
             tour: tour
           });
+          next();
 
-        case 4:
+        case 6:
         case "end":
           return _context2.stop();
       }
     }
+  });
+});
+exports.login = asyncErrorCatcher(function (req, res) {
+  console.log('hiii');
+  res.status(200).render('login', {
+    title: "Welcome to Natours Login to Continue"
   });
 });

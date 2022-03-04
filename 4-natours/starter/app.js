@@ -72,8 +72,12 @@ if(process.env.NODE_ENV === 'development'){
 }
 
 
+
+
 //views routes
 app.use('/',viewRouter)
+
+
 
 
 //api routes

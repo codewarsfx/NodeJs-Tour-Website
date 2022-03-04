@@ -1,3 +1,5 @@
+
+
 extends base 
 mixin heading-box-detail(img,label,date)
     .overview-box__detail
@@ -16,6 +18,9 @@ mixin reviewCard(review)
                         -const status = review.rating >= rating? 'active' : 'inactive'
                         svg.reviews__star.reviews__star--active
                             use(xlink:href='/img/icons.svg#icon-star' class=`reviews__star--${status}`)
+block append head    
+    <script  src='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js'></script>
+    <link  href='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css' rel='stylesheet' />
 block content
     section.section-header
         .header__hero
@@ -71,7 +76,7 @@ block content
             .picture-box
                 img.picture-box__img(src=`/img/tours/${img}`, alt=`${tour.name}` class=`picture-box__img--${index+1}`)
 
-    section.section-map
+    section.section-map(data-location=`${JSON.stringify(tour.locations)}`)
         #map
 
     section.section-reviews
