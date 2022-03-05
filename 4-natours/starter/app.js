@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xssClean = require('xss-clean')
 const preventParameterPollution = require('hpp')
 const path = require('path')
+const cookieParser = require('cookie-parser')
 
 
 
@@ -31,9 +32,27 @@ app.set('views',path.join(__dirname,'views'))
 
 app.use(express.static(path.join(__dirname,'public')))
 
-
+/*eslint-disable*/
 //set security headers 
-app.use(helmet())
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", 'data:', 'blob:'],
+ 
+      fontSrc: ["'self'", 'https:', 'data:'],
+
+      scriptSrc: ["'self'", 'unsafe-inline'],
+ 
+      scriptSrc: ["'self'", 'https://*.cloudflare.com'],
+ 
+      scriptSrcElem: ["'self'",'https:', 'https://*.cloudflare.com'],
+ 
+      styleSrc: ["'self'", 'https:', 'unsafe-inline'],
+ 
+      connectSrc: ["'self'", 'data', 'https://*.cloudflare.com']
+    },
+  })
+);
 
 
 
@@ -47,6 +66,7 @@ app.use('/api',rateLimiter({
 
 //set the amount of data to be received in the request body
 app.use(express.json({limit:'10kb'}))
+app.use(cookieParser())
 
 //protect against nosql injection attacks 
 app.use(mongoSanitize())

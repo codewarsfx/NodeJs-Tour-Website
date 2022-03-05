@@ -35,15 +35,14 @@ exports.getTour = asyncErrorCatcher(function _callee2(req, res, next) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          console.log('hiii ji');
-          _context2.next = 3;
+          _context2.next = 2;
           return regeneratorRuntime.awrap(Tour.findOne({
             slug: req.params.slug
           }).populate({
             path: 'reviews'
           }));
 
-        case 3:
+        case 2:
           tour = _context2.sent;
           res.status(200).render('tour', {
             title: "".concat(tour.name, " Tour"),
@@ -51,16 +50,17 @@ exports.getTour = asyncErrorCatcher(function _callee2(req, res, next) {
           });
           next();
 
-        case 6:
+        case 5:
         case "end":
           return _context2.stop();
       }
     }
   });
 });
-exports.login = asyncErrorCatcher(function (req, res) {
-  console.log('hiii');
+
+exports.login = function (req, res) {
   res.status(200).render('login', {
     title: "Welcome to Natours Login to Continue"
   });
-});
+  console.log(req.cookies);
+};

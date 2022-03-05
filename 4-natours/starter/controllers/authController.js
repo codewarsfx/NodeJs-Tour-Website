@@ -79,12 +79,18 @@ exports.login = asyncErrorCatcher( async (req,res,next)=>{
 //in order to protect access to certain routes there'd be some kind of protection mechanism to grant access to only protected users.
 exports.protect = asyncErrorCatcher(async (req,res,next)=>{
     // the protection algorithm is as follows
-   
+   let token
     
     // 1. check if the token exists in the request header
-    if(!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) return next(new AppError('Please login to receive authorization token',401));
-    const token = req.headers.authorization.split(' ')[1]
-    
+ 
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+          token = req.headers.authorization.split(' ')[1]
+   }
+   else if(req.cookies.jwt) token=req.cookies.jwt
+   else{
+        return next(new AppError('Please login to receive authorization token',401));
+   }
+         
     //2. verify the token and get it's payload. two kind of errors can occur in the verification stage
     const jwtTokenPayload = await jwt.verify(token,process.env.SIGNATURE)
     
