@@ -1,9 +1,5 @@
 "use strict";
 
-var _directives;
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 // packages
 var express = require('express');
 
@@ -44,13 +40,7 @@ app.use(express["static"](path.join(__dirname, 'public')));
 /*eslint-disable*/
 //set security headers 
 
-app.use(helmet.contentSecurityPolicy({
-  directives: (_directives = {
-    defaultSrc: ["'self'", 'data:', 'blob:'],
-    fontSrc: ["'self'", 'https:', 'data:'],
-    scriptSrc: ["'self'", 'unsafe-inline']
-  }, _defineProperty(_directives, "scriptSrc", ["'self'", 'https://*.cloudflare.com']), _defineProperty(_directives, "scriptSrcElem", ["'self'", 'https:', 'https://*.cloudflare.com']), _defineProperty(_directives, "styleSrc", ["'self'", 'https:', 'unsafe-inline']), _defineProperty(_directives, "connectSrc", ["'self'", 'data', 'https://*.cloudflare.com']), _directives)
-})); // limit the number of requests
+app.use(helmet()); // limit the number of requests
 
 app.use('/api', rateLimiter({
   max: 100,

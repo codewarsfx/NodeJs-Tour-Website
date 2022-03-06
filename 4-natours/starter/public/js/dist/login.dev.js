@@ -1,5 +1,10 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.shoutHello = exports.loginUser = void 0;
+
 /*eslint-disable*/
 var loginUser = function loginUser(email, password) {
   var res;
@@ -20,26 +25,30 @@ var loginUser = function loginUser(email, password) {
 
         case 3:
           res = _context.sent;
-          console.log(res);
-          _context.next = 10;
+          if (res.data.sta) alert('user loggen in ');
+          window.setTimeout(function () {
+            location.assign('/');
+          }, 150);
+          _context.next = 11;
           break;
 
-        case 7:
-          _context.prev = 7;
+        case 8:
+          _context.prev = 8;
           _context.t0 = _context["catch"](0);
           console.log(_context.t0);
 
-        case 10:
+        case 11:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 7]]);
+  }, null, null, [[0, 8]]);
 };
 
-document.querySelector('form').addEventListener('submit', function (e) {
-  e.preventDefault();
-  var email = document.getElementById('email').value;
-  var password = document.getElementById('password').value;
-  loginUser(email, password);
-});
+exports.loginUser = loginUser;
+
+var shoutHello = function shoutHello() {
+  console.log('say hello from login');
+};
+
+exports.shoutHello = shoutHello;

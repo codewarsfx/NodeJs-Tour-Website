@@ -1,6 +1,7 @@
 /*eslint-disable*/
-
-const loginUser = async (email,password)=>{
+export const loginUser = async (email,password)=>{
+    
+    
     try{
     const res = await axios({
         method:'post',
@@ -11,7 +12,13 @@ const loginUser = async (email,password)=>{
         }
     })
     
-    console.log(res)
+    
+    if(res.data.sta)
+    
+    alert('user loggen in ')
+    window.setTimeout(()=>{
+        location.assign('/')
+    },150)
 }
     catch(error){
         console.log(error)
@@ -19,12 +26,9 @@ const loginUser = async (email,password)=>{
     
 }
 
-document.querySelector('form').addEventListener('submit',(e)=>{
-    
-    e.preventDefault()
-    const email = document.getElementById('email').value
-    const password = document.getElementById('password').value
-    
-    loginUser(email,password)
-})
+export const shoutHello = ()=>{
+    console.log('say hello from login')
+}
+
+
 

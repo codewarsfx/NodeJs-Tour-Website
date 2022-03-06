@@ -35,24 +35,8 @@ app.use(express.static(path.join(__dirname,'public')))
 /*eslint-disable*/
 //set security headers 
 app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'", 'data:', 'blob:'],
- 
-      fontSrc: ["'self'", 'https:', 'data:'],
+  helmet())
 
-      scriptSrc: ["'self'", 'unsafe-inline'],
- 
-      scriptSrc: ["'self'", 'https://*.cloudflare.com'],
- 
-      scriptSrcElem: ["'self'",'https:', 'https://*.cloudflare.com'],
- 
-      styleSrc: ["'self'", 'https:', 'unsafe-inline'],
- 
-      connectSrc: ["'self'", 'data', 'https://*.cloudflare.com']
-    },
-  })
-);
 
 
 

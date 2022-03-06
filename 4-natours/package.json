@@ -9,7 +9,8 @@
   "scripts": {
     "start": " nodemon server.js",
     "start:prod": "SET NODE_ENV = production & nodemon starter/server.js",
-    "debug": "ndb starter/server.js"
+    "debug": "ndb starter/server.js",
+    "watch": "parcel watch ./starter/public/js/index.js --out-dir ./starter/public/js --out-file bundle.js"
   },
   "author": "Innocent chidera Shammah",
   "license": "ISC",
@@ -40,6 +41,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
+    "parcel-bundler": "^1.12.3",
     "prettier": "^2.2.1"
   }
 }

@@ -111,6 +111,24 @@ exports.protect = asyncErrorCatcher(async (req,res,next)=>{
 })
 
 
+exports.protectViews= asyncErrorCatcher(async (req,res,next)=>{
+   if(req.cookies.jwt){
+        const token = req.cookies.jwt
+        const jwtTokenPayload = await jwt.verify(token,process.env.SIGNATURE)
+        const currentUser = await UserModel.findById(jwtTokenPayload.id)
+        if(!currentUser) return next();
+
+        if(currentUser.checkPasswordUpdate(jwtTokenPayload.iat)) return next();
+        res.locals.user = currentUser
+        return next()  
+       
+   }   
+    
+    next() 
+
+})
+
+
 
 
 
