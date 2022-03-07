@@ -3,7 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.shoutHello = exports.loginUser = void 0;
+exports.logoutUser = exports.loginUser = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _alert = require("./alert");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 /*eslint-disable*/
 var loginUser = function loginUser(email, password) {
@@ -14,7 +20,7 @@ var loginUser = function loginUser(email, password) {
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return regeneratorRuntime.awrap(axios({
+          return regeneratorRuntime.awrap((0, _axios["default"])({
             method: 'post',
             url: '/api/v1/users/login',
             data: {
@@ -25,30 +31,67 @@ var loginUser = function loginUser(email, password) {
 
         case 3:
           res = _context.sent;
-          if (res.data.sta) alert('user loggen in ');
-          window.setTimeout(function () {
-            location.assign('/');
-          }, 150);
-          _context.next = 11;
+
+          if (res.data.message) {
+            (0, _alert.createAlert)("successfully logged in", true);
+            window.setTimeout(function () {
+              location.assign('/');
+            }, 150);
+          }
+
+          _context.next = 10;
           break;
 
-        case 8:
-          _context.prev = 8;
+        case 7:
+          _context.prev = 7;
           _context.t0 = _context["catch"](0);
-          console.log(_context.t0);
+          (0, _alert.createAlert)(_context.t0.response.data.message, false);
 
-        case 11:
+        case 10:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 8]]);
+  }, null, null, [[0, 7]]);
 };
 
 exports.loginUser = loginUser;
 
-var shoutHello = function shoutHello() {
-  console.log('say hello from login');
+var logoutUser = function logoutUser() {
+  var res;
+  return regeneratorRuntime.async(function logoutUser$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          _context2.next = 3;
+          return regeneratorRuntime.awrap((0, _axios["default"])({
+            method: 'get',
+            url: '/api/v1/users/logOut'
+          }));
+
+        case 3:
+          res = _context2.sent;
+
+          if (res.data.message) {
+            location.reload(true);
+          }
+
+          _context2.next = 11;
+          break;
+
+        case 7:
+          _context2.prev = 7;
+          _context2.t0 = _context2["catch"](0);
+          console.log(_context2.t0);
+          (0, _alert.createAlert)('error logging out', false);
+
+        case 11:
+        case "end":
+          return _context2.stop();
+      }
+    }
+  }, null, null, [[0, 7]]);
 };
 
-exports.shoutHello = shoutHello;
+exports.logoutUser = logoutUser;

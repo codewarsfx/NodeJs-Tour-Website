@@ -18,9 +18,6 @@ mixin reviewCard(review)
                         -const status = review.rating >= rating? 'active' : 'inactive'
                         svg.reviews__star.reviews__star--active
                             use(xlink:href='/img/icons.svg#icon-star' class=`reviews__star--${status}`)
-block append head    
-    <script  src='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js'></script>
-    <link  href='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css' rel='stylesheet' />
 block content
     section.section-header
         .header__hero

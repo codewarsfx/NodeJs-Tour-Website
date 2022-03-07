@@ -77,7 +77,10 @@ userSchema.pre(/^find/,function(next){
 })
 
 
-userSchema.methods.comparePasswords = async  (newPassword,originalPassword) => await bcrypt.compare(newPassword,originalPassword);
+userSchema.methods.comparePasswords = async (newPassword,originalPassword) => await bcrypt.compare(newPassword,originalPassword);
+
+
+
 
 userSchema.methods.checkPasswordUpdate = (JWTTimeStamp)=>{
     

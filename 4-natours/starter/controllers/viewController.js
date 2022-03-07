@@ -34,7 +34,4 @@ exports.login = (req,res)=>{
     res.status(200).render('login',{
          title: `Welcome to Natours Login to Continue`,
     })
-    
-    console.log(req.cookies)
-    
 }

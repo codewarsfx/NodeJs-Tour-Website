@@ -2,21 +2,23 @@
 
 var _login = require("./login");
 
-var formElement = document.querySelector('form');
+var domElements = {
+  emailELement: document.querySelector('#email'),
+  passwordElement: document.querySelector('#password'),
+  formElement: document.querySelector('.form'),
+  logOut: document.querySelector('.logout')
+};
 
-if (formElement) {
-  formElement.addEventListener('submit', function (e) {
+if (domElements.formElement) {
+  domElements.formElement.addEventListener('submit', function (e) {
     e.preventDefault();
-    var inputEmail = document.getElementById('email');
-    var inputPassword = document.getElementById('password');
-
-    if (inputEmail && inputPassword) {
-      var email = inputEmail.value;
-      var password = inputPassword.value;
-      loginUser(email, password);
-    }
+    emailValue = domElements.emailELement.value, passwordValue = domElements.passwordElement.value;
+    (0, _login.loginUser)(emailValue, passwordValue);
   });
 }
 
-console.log('hey');
-(0, _login.shoutHello)();
+if (domElements.logOut) {
+  domElements.logOut.addEventListener('click', function () {
+    (0, _login.logoutUser)(); // location.reload(true)
+  });
+}

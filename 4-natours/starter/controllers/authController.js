@@ -61,9 +61,28 @@ exports.login = asyncErrorCatcher( async (req,res,next)=>{
     const userWithEmail = await UserModel.findOne({email}).select('+password')
   
     //if the password isnt correct return error .if it is send a jwt token to the client 
-    if(!userWithEmail || !(await userWithEmail.comparePasswords(req.body.password,userWithEmail.password)))return next(new AppError('you have entered an incorrect email or password ',401));
+    if(!userWithEmail || !(await userWithEmail.comparePasswords(req.body.password,userWithEmail.password))){   
+    return next(new AppError('you have entered an incorrect email or password ',401)) 
+    }
+
+ ;
     signJWT(userWithEmail._id,res,200,userWithEmail)
+
 })
+
+
+exports.logout = (req,res)=>{
+    console.log('hy logout')
+    res.cookie('jwt','chideraS',{
+        expires:new Date(Date.now() + 10 * 1000),
+        httpOnly:true
+    })
+    res.status(200).json({
+        "status":"ok",
+        "message" : " You have successfully logged out "
+        
+    })
+}
 
 
 
@@ -114,6 +133,7 @@ exports.protect = asyncErrorCatcher(async (req,res,next)=>{
 exports.protectViews= asyncErrorCatcher(async (req,res,next)=>{
    if(req.cookies.jwt){
         const token = req.cookies.jwt
+        try{
         const jwtTokenPayload = await jwt.verify(token,process.env.SIGNATURE)
         const currentUser = await UserModel.findById(jwtTokenPayload.id)
         if(!currentUser) return next();
@@ -121,7 +141,10 @@ exports.protectViews= asyncErrorCatcher(async (req,res,next)=>{
         if(currentUser.checkPasswordUpdate(jwtTokenPayload.iat)) return next();
         res.locals.user = currentUser
         return next()  
-       
+        }
+        catch(error){
+            return next()
+        }
    }   
     
     next() 

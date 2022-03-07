@@ -5,18 +5,19 @@
     "node": ">=8.3.0"
   },
   "description": "learning node express and mongo db",
-  "main": "starter/server",
   "scripts": {
-    "start": " nodemon server.js",
+    "start": " nodemon ./starter/server.js",
     "start:prod": "SET NODE_ENV = production & nodemon starter/server.js",
     "debug": "ndb starter/server.js",
-    "watch": "parcel watch ./starter/public/js/index.js --out-dir ./starter/public/js --out-file bundle.js"
+    "watch": "parcel ./starter/public/js/index.js --dist-dir ./starter/public/js/output "
   },
   "author": "Innocent chidera Shammah",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.26.0",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-mongo-sanitize": "^2.2.0",
@@ -41,7 +42,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
-    "parcel-bundler": "^1.12.3",
-    "prettier": "^2.2.1"
+    "parcel": "^2.3.2",
+    "prettier": "^2.2.1",
+    "process": "^0.11.10"
   }
 }

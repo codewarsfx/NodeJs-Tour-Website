@@ -129,15 +129,29 @@ exports.login = asyncErrorCatcher(function _callee2(req, res, next) {
           return _context3.abrupt("return", next(new AppError('you have entered an incorrect email or password ', 401)));
 
         case 13:
+          ;
           signJWT(userWithEmail._id, res, 200, userWithEmail);
 
-        case 14:
+        case 15:
         case "end":
           return _context3.stop();
       }
     }
   });
-}); //in order to protect access to certain routes there'd be some kind of protection mechanism to grant access to only protected users.
+});
+
+exports.logout = function (req, res) {
+  console.log('hy logout');
+  res.cookie('jwt', 'chideraS', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  });
+  res.status(200).json({
+    "status": "ok",
+    "message": " You have successfully logged out "
+  });
+}; //in order to protect access to certain routes there'd be some kind of protection mechanism to grant access to only protected users.
+
 
 exports.protect = asyncErrorCatcher(function _callee3(req, res, next) {
   var token, jwtTokenPayload, currentUser;
@@ -212,50 +226,56 @@ exports.protectViews = asyncErrorCatcher(function _callee4(req, res, next) {
       switch (_context5.prev = _context5.next) {
         case 0:
           if (!req.cookies.jwt) {
-            _context5.next = 14;
+            _context5.next = 20;
             break;
           }
 
           token = req.cookies.jwt;
-          _context5.next = 4;
+          _context5.prev = 2;
+          _context5.next = 5;
           return regeneratorRuntime.awrap(jwt.verify(token, process.env.SIGNATURE));
 
-        case 4:
+        case 5:
           jwtTokenPayload = _context5.sent;
-          _context5.next = 7;
+          _context5.next = 8;
           return regeneratorRuntime.awrap(UserModel.findById(jwtTokenPayload.id));
 
-        case 7:
+        case 8:
           currentUser = _context5.sent;
 
           if (currentUser) {
-            _context5.next = 10;
+            _context5.next = 11;
             break;
           }
 
           return _context5.abrupt("return", next());
 
-        case 10:
+        case 11:
           if (!currentUser.checkPasswordUpdate(jwtTokenPayload.iat)) {
-            _context5.next = 12;
+            _context5.next = 13;
             break;
           }
 
           return _context5.abrupt("return", next());
 
-        case 12:
+        case 13:
           res.locals.user = currentUser;
           return _context5.abrupt("return", next());
 
-        case 14:
+        case 17:
+          _context5.prev = 17;
+          _context5.t0 = _context5["catch"](2);
+          return _context5.abrupt("return", next());
+
+        case 20:
           next();
 
-        case 15:
+        case 21:
         case "end":
           return _context5.stop();
       }
     }
-  });
+  }, null, null, [[2, 17]]);
 }); // this function gives users the ability to perform  certain actions based on the role they posses 
 
 exports.authorizeUser = function (_ref) {

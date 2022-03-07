@@ -27,7 +27,7 @@ const handleProductionErrors = (err,res) => {
      }
 } 
 
-const handleCastErrors = (error) =>{
+const handleCastErrors = (error) => {
    const message = `sorry  ${error.path} : ${error.value} is invalid`
      return new AppError(message, 404) 
 }
@@ -61,7 +61,7 @@ const handleTokenExpiredrrors = ()=> new AppError('Error, Expired Token. Please 
 
 //Global handling error middleware
 module.exports = (error,req,res,next) =>{
-
+     console.log(error.message)
      error.statusCode = error.statusCode  || 500
      error.status = error.status || "error"
      
@@ -89,7 +89,6 @@ module.exports = (error,req,res,next) =>{
           
           handleProductionErrors(newError,res)
      }
-     
 
      next()
 }

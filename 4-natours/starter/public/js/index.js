@@ -1,24 +1,40 @@
-import {shoutHello } from './login'
+import {loginUser, logoutUser} from './login'
 
-const formElement= document.querySelector('form')
-if(formElement){
-    formElement.addEventListener('submit',(e)=>{
-    
-    e.preventDefault()
-    
-    const inputEmail =  document.getElementById('email')
-    const inputPassword = document.getElementById('password')
 
-    if(inputEmail&& inputPassword){
-            const email = inputEmail.value
-            const password = inputPassword.value
-            loginUser(email,password)
-    }
 
-})   
+const domElements = {
+    emailELement: document.querySelector('#email'),
+    passwordElement: document.querySelector('#password'),
+    formElement: document.querySelector('.form'),
+    logOut: document.querySelector('.logout') 
 }
 
 
-console.log('hey')
-shoutHello()
 
+
+if(domElements.formElement){
+    
+  domElements.formElement.addEventListener('submit',(e)=>{
+        e.preventDefault()
+        
+        emailValue = domElements.emailELement.value,
+        passwordValue = domElements.passwordElement.value
+        
+        
+        loginUser(emailValue,passwordValue)
+        
+        
+    })
+    
+    
+    
+    
+}
+
+if(domElements.logOut){
+    domElements.logOut.addEventListener('click',()=>{
+        logoutUser()
+        // location.reload(true)
+        
+    })
+}
