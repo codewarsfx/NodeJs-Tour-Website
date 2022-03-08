@@ -210,9 +210,10 @@ exports.protect = asyncErrorCatcher(function _callee3(req, res, next) {
 
         case 19:
           req.user = currentUser;
+          res.locals.user = currentUser;
           next();
 
-        case 21:
+        case 22:
         case "end":
           return _context4.stop();
       }

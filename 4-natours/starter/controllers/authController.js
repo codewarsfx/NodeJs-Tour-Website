@@ -125,6 +125,7 @@ exports.protect = asyncErrorCatcher(async (req,res,next)=>{
     if(currentUser.checkPasswordUpdate(jwtTokenPayload.iat)) return next(new AppError('User modified this password already',401))
     
     req.user = currentUser
+    res.locals.user = currentUser
     
     next()  
 })

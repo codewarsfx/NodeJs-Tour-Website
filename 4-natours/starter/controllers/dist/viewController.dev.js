@@ -63,3 +63,9 @@ exports.login = function (req, res) {
     title: "Welcome to Natours Login to Continue"
   });
 };
+
+exports.userAccount = function (req, res) {
+  res.status(200).render('user', {
+    title: 'User account page'
+  });
+};
