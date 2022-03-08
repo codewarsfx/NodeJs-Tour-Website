@@ -520,10 +520,13 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"hstOJ":[function(require,module,exports) {
 var _login = require("./login");
+var _updateUser = require("./updateUser");
 const domElements = {
     emailELement: document.querySelector('#email'),
+    nameELement: document.querySelector('#name'),
     passwordElement: document.querySelector('#password'),
-    formElement: document.querySelector('.form'),
+    formElement: document.querySelector('.l'),
+    formUserELement: document.querySelector('.form-user-data'),
     logOut: document.querySelector('.logout')
 };
 if (domElements.formElement) domElements.formElement.addEventListener('submit', (e)=>{
@@ -533,10 +536,18 @@ if (domElements.formElement) domElements.formElement.addEventListener('submit', 
 });
 if (domElements.logOut) domElements.logOut.addEventListener('click', ()=>{
     _login.logoutUser();
-// location.reload(true)
+});
+if (domElements.formUserELement) domElements.formUserELement.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const nameValue = domElements.nameELement.value;
+    const emailValue = domElements.emailELement.value;
+    _updateUser.updateUserInfo({
+        nameValue,
+        emailValue
+    });
 });
 
-},{"./login":"iQIc4"}],"iQIc4":[function(require,module,exports) {
+},{"./login":"iQIc4","./updateUser":"fQ5FR"}],"iQIc4":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "loginUser", ()=>loginUser
@@ -2185,6 +2196,33 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["aXKb2","hstOJ"], "hstOJ", "parcelRequire1a69")
+},{}],"fQ5FR":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "updateUserInfo", ()=>updateUserInfo
+);
+var _axios = require("axios");
+var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _alert = require("./alert");
+const updateUserInfo = async (userInfo)=>{
+    try {
+        const res = await _axiosDefault.default({
+            method: 'patch',
+            url: '/api/v1/users/updateSelf',
+            data: {
+                email: userInfo.emailValue,
+                name: userInfo.nameValue
+            }
+        });
+        if (res.data.message) {
+            _alert.createAlert('data successfully updated', true);
+            location.reload(true);
+        }
+    } catch (error) {
+        _alert.createAlert(`${error.response.data.message}`, false);
+    }
+};
+
+},{"axios":"jo6P5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./alert":"eGrZS"}]},["aXKb2","hstOJ"], "hstOJ", "parcelRequire1a69")
 
 //# sourceMappingURL=index.js.map

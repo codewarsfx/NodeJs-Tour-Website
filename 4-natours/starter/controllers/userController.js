@@ -6,17 +6,16 @@ const controllerFactory = require('./ControllerFactory')
 
 const cleanUpRequestBody = (body,...allowedfields)=>{
     const newBody ={}
-    
+    console.log(Object.keys(body))
     Object.keys(body).forEach(el=>{
-        if (allowedfields.includes(el)) newBody[el] =body[el]
-        
+        if (allowedfields.includes(el)) newBody[el] = body[el]
     })
     return newBody
-    
 }
 
 
 exports.updateSelf = AsyncErrorCatcher(async (req,res,next)=>{
+    console.log(req.body)
     //ensure the updates are not password changes 
     if(req.body.password || req.body.confirmPassword) return next(new AppError('You can perform password update on this route use /forgotPassword instead'))
     //perform updates to user updates but only to specific field
@@ -27,7 +26,7 @@ exports.updateSelf = AsyncErrorCatcher(async (req,res,next)=>{
     })
     res.status(200).json({
         message:"ok",
-        userUpdateObject
+        data: userUpdateObject
     })
     
 })
