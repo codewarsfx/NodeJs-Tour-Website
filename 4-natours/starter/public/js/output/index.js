@@ -527,7 +527,11 @@ const domElements = {
     passwordElement: document.querySelector('#password'),
     formElement: document.querySelector('.l'),
     formUserELement: document.querySelector('.form-user-data'),
-    logOut: document.querySelector('.logout')
+    logOut: document.querySelector('.logout'),
+    currentPasswordElement: document.querySelector('#password-current'),
+    newPasswordElement: document.querySelector('#password'),
+    confirmPasswordELement: document.querySelector('#password-confirm'),
+    passwordFormElement: document.querySelector('.password-form')
 };
 if (domElements.formElement) domElements.formElement.addEventListener('submit', (e)=>{
     e.preventDefault();
@@ -541,10 +545,26 @@ if (domElements.formUserELement) domElements.formUserELement.addEventListener('s
     e.preventDefault();
     const nameValue = domElements.nameELement.value;
     const emailValue = domElements.emailELement.value;
-    _updateUser.updateUserInfo({
+    _updateUser.updateSetting({
         nameValue,
         emailValue
-    });
+    }, 'data');
+});
+const btn = document.querySelector('.btn-save-pass');
+if (btn) btn.addEventListener('click', ()=>{
+    btn.textContent = "Updating Password...";
+});
+if (domElements.passwordFormElement) domElements.passwordFormElement.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const currentPassword = domElements.currentPasswordElement.value;
+    const newPassword = domElements.newPasswordElement.value;
+    const confirmPassword = domElements.confirmPasswordELement.value;
+    await _updateUser.updateSetting({
+        currentPassword,
+        newPassword,
+        confirmPassword
+    }, 'password');
+    btn.textContent = 'Save password';
 });
 
 },{"./login":"iQIc4","./updateUser":"fQ5FR"}],"iQIc4":[function(require,module,exports) {
@@ -585,7 +605,6 @@ const logoutUser = async ()=>{
         });
         if (res.data.message) location.reload(true);
     } catch (error) {
-        console.log(error);
         _alert.createAlert('error logging out', false);
     }
 };
@@ -2199,23 +2218,29 @@ exports.export = function(dest, destName, get) {
 },{}],"fQ5FR":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "updateUserInfo", ()=>updateUserInfo
+parcelHelpers.export(exports, "updateSetting", ()=>updateSetting
 );
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
 var _alert = require("./alert");
-const updateUserInfo = async (userInfo)=>{
+const updateSetting = async (userInfo, type)=>{
+    const url = `/api/v1/users/${type === "password" ? "updatePassword" : "updateSelf"}`;
+    const data = type === "password" ? {
+        currentPassword: userInfo.currentPassword,
+        newPassword: userInfo.newPassword,
+        confirmPassword: userInfo.confirmPassword
+    } : {
+        email: userInfo.emailValue,
+        name: userInfo.nameValue
+    };
     try {
         const res = await _axiosDefault.default({
             method: 'patch',
-            url: '/api/v1/users/updateSelf',
-            data: {
-                email: userInfo.emailValue,
-                name: userInfo.nameValue
-            }
+            url,
+            data
         });
         if (res.data.message) {
-            _alert.createAlert('data successfully updated', true);
+            _alert.createAlert(`${type} successfully updated`, true);
             location.reload(true);
         }
     } catch (error) {
@@ -2223,6 +2248,6 @@ const updateUserInfo = async (userInfo)=>{
     }
 };
 
-},{"axios":"jo6P5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./alert":"eGrZS"}]},["aXKb2","hstOJ"], "hstOJ", "parcelRequire1a69")
+},{"axios":"jo6P5","./alert":"eGrZS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["aXKb2","hstOJ"], "hstOJ", "parcelRequire1a69")
 
 //# sourceMappingURL=index.js.map

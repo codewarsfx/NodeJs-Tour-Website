@@ -40,7 +40,6 @@ export const logoutUser = async ()=>{
     }
     }
     catch(error){
-        console.log(error)
         createAlert('error logging out',false)
     }
  

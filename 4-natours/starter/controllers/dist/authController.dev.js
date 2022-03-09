@@ -404,3 +404,45 @@ exports.resetPassword = asyncErrorCatcher(function _callee6(req, res, next) {
     }
   });
 });
+exports.updatePassword = asyncErrorCatcher(function _callee7(req, res, next) {
+  var _req$body2, currentPassword, newPassword, confirmPassword, userFromDatabase;
+
+  return regeneratorRuntime.async(function _callee7$(_context8) {
+    while (1) {
+      switch (_context8.prev = _context8.next) {
+        case 0:
+          _req$body2 = req.body, currentPassword = _req$body2.currentPassword, newPassword = _req$body2.newPassword, confirmPassword = _req$body2.confirmPassword;
+          _context8.next = 3;
+          return regeneratorRuntime.awrap(UserModel.findById({
+            _id: req.user.id
+          }).select('+password'));
+
+        case 3:
+          userFromDatabase = _context8.sent;
+          _context8.next = 6;
+          return regeneratorRuntime.awrap(userFromDatabase.comparePasswords(currentPassword, userFromDatabase.password));
+
+        case 6:
+          if (_context8.sent) {
+            _context8.next = 8;
+            break;
+          }
+
+          return _context8.abrupt("return", next(new AppError('The current password you entered is incorrect', 401)));
+
+        case 8:
+          userFromDatabase.password = newPassword;
+          userFromDatabase.confirmPassword = confirmPassword;
+          _context8.next = 12;
+          return regeneratorRuntime.awrap(userFromDatabase.save());
+
+        case 12:
+          signJWT(userFromDatabase._id, res, 200);
+
+        case 13:
+        case "end":
+          return _context8.stop();
+      }
+    }
+  });
+});

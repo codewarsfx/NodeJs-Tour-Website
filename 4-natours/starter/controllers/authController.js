@@ -235,7 +235,20 @@ exports.resetPassword = asyncErrorCatcher(
     }
 )
 
+exports.updatePassword = asyncErrorCatcher(async (req,res,next)=>{
+    
+    const {currentPassword,newPassword, confirmPassword} = req.body
+    const userFromDatabase =await UserModel.findById({_id:req.user.id}).select('+password')
+    if(!(await userFromDatabase.comparePasswords(currentPassword, userFromDatabase.password))) return next(new AppError('The current password you entered is incorrect',401))
+    
+    userFromDatabase.password = newPassword
+    userFromDatabase.confirmPassword = confirmPassword
+    
+    await userFromDatabase.save()
+    
+    signJWT(userFromDatabase._id,res,200)
 
+})
 
 
 

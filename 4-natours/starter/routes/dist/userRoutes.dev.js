@@ -16,7 +16,8 @@ Router.route("/resetPassword/:token").patch(authController.resetPassword); //onl
 Router.use(authController.protect);
 Router.route("/updateSelf").patch(userController.updateSelf);
 Router.route("/userDeleteSelf")["delete"](userController.deleteUser);
-Router.route("/me")["delete"](userController.getMe, userController.getUser); //only authorized users i.e admin can access this routes
+Router.route("/me")["delete"](userController.getMe, userController.getUser);
+Router.route("/updatePassword").patch(authController.updatePassword); //only authorized users i.e admin can access this routes
 
 Router.use(authController.authorizeUser(['admin']));
 Router.route('/').get(userController.getUsers).post(userController.createUser);

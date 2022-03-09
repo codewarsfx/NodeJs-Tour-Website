@@ -77,16 +77,15 @@ var logoutUser = function logoutUser() {
             location.reload(true);
           }
 
-          _context2.next = 11;
+          _context2.next = 10;
           break;
 
         case 7:
           _context2.prev = 7;
           _context2.t0 = _context2["catch"](0);
-          console.log(_context2.t0);
           (0, _alert.createAlert)('error logging out', false);
 
-        case 11:
+        case 10:
         case "end":
           return _context2.stop();
       }

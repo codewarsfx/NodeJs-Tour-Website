@@ -20,6 +20,7 @@ Router.use(authController.protect)
 Router.route("/updateSelf").patch(userController.updateSelf)
 Router.route("/userDeleteSelf").delete(userController.deleteUser) 
 Router.route("/me").delete(userController.getMe,userController.getUser) 
+Router.route("/updatePassword").patch(authController.updatePassword)
 
 
 //only authorized users i.e admin can access this routes

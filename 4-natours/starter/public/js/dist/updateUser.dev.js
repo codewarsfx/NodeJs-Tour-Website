@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateUserInfo = void 0;
+exports.updateSetting = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -11,45 +11,51 @@ var _alert = require("./alert");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var updateUserInfo = function updateUserInfo(userInfo) {
-  var res;
-  return regeneratorRuntime.async(function updateUserInfo$(_context) {
+var updateSetting = function updateSetting(userInfo, type) {
+  var url, data, res;
+  return regeneratorRuntime.async(function updateSetting$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _context.prev = 0;
-          _context.next = 3;
+          url = "/api/v1/users/".concat(type === "password" ? "updatePassword" : "updateSelf");
+          data = type === "password" ? {
+            currentPassword: userInfo.currentPassword,
+            newPassword: userInfo.newPassword,
+            confirmPassword: userInfo.confirmPassword
+          } : {
+            email: userInfo.emailValue,
+            name: userInfo.nameValue
+          };
+          _context.prev = 2;
+          _context.next = 5;
           return regeneratorRuntime.awrap((0, _axios["default"])({
             method: 'patch',
-            url: '/api/v1/users/updateSelf',
-            data: {
-              email: userInfo.emailValue,
-              name: userInfo.nameValue
-            }
+            url: url,
+            data: data
           }));
 
-        case 3:
+        case 5:
           res = _context.sent;
 
           if (res.data.message) {
-            (0, _alert.createAlert)('data successfully updated', true);
+            (0, _alert.createAlert)("".concat(type, " successfully updated"), true);
             location.reload(true);
           }
 
-          _context.next = 10;
+          _context.next = 12;
           break;
 
-        case 7:
-          _context.prev = 7;
-          _context.t0 = _context["catch"](0);
+        case 9:
+          _context.prev = 9;
+          _context.t0 = _context["catch"](2);
           (0, _alert.createAlert)("".concat(_context.t0.response.data.message), false);
 
-        case 10:
+        case 12:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 7]]);
+  }, null, null, [[2, 9]]);
 };
 
-exports.updateUserInfo = updateUserInfo;
+exports.updateSetting = updateSetting;
