@@ -72,7 +72,6 @@ exports.login = asyncErrorCatcher( async (req,res,next)=>{
 
 
 exports.logout = (req,res)=>{
-    console.log('hy logout')
     res.cookie('jwt','chideraS',{
         expires:new Date(Date.now() + 10 * 1000),
         httpOnly:true
@@ -80,7 +79,6 @@ exports.logout = (req,res)=>{
     res.status(200).json({
         "status":"ok",
         "message" : " You have successfully logged out "
-        
     })
 }
 

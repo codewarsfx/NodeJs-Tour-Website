@@ -8,7 +8,7 @@ Router.get('/',auth.protectViews,viewController.getOverview)
 Router.get('/tour/:slug',auth.protectViews,viewController.getTour)
 
 Router.get('/login', viewController.login)
-Router.get('/me',auth.protect, viewController.userAccount)
+Router.get('/me', auth.protect, viewController.userAccount)
 
 
 

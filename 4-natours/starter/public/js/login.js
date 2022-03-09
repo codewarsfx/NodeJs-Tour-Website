@@ -35,8 +35,14 @@ export const logoutUser = async ()=>{
         method:'get',
         url:'/api/v1/users/logOut',
     })
+    console.log(res)
     if(res.data.message){
-        location.reload(true)
+        if(window.location.pathname =="/me"){
+            window.assign('/')
+        }
+        else{
+             location.reload(true)
+        }
     }
     }
     catch(error){

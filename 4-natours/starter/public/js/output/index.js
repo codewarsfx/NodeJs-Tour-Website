@@ -603,7 +603,11 @@ const logoutUser = async ()=>{
             method: 'get',
             url: '/api/v1/users/logOut'
         });
-        if (res.data.message) location.reload(true);
+        console.log(res);
+        if (res.data.message) {
+            if (window.location.pathname == "/me") window.assign('/');
+            else location.reload(true);
+        }
     } catch (error) {
         _alert.createAlert('error logging out', false);
     }

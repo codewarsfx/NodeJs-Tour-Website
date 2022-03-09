@@ -17,7 +17,7 @@ Router.route("/resetPassword/:token").patch(authController.resetPassword)
 
 //only authenticated users can access the following routes 
 Router.use(authController.protect)
-Router.route("/updateSelf").patch(userController.updateSelf)
+Router.route("/updateSelf").patch(userController.uploadImage,userController.updateSelf)
 Router.route("/userDeleteSelf").delete(userController.deleteUser) 
 Router.route("/me").delete(userController.getMe,userController.getUser) 
 Router.route("/updatePassword").patch(authController.updatePassword)

@@ -1,9 +1,42 @@
+const multer = require('multer')
+
 const AsyncErrorCatcher = require('../utils/AsyncErrorCatcher');
 const AppError = require('../utils/appError')
 const User = require('../Models/userModel')
 const controllerFactory = require('./ControllerFactory')
 
 
+//multer storage configuration that configures the filename and destination of the file upload.
+const storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null, 'starter/public/img/users')
+    },
+    filename:function(req,file,cb){
+        const ext = file.mimetype.split('/')[1]
+        const fileName = `user-${req.user.id}-${Date.now()}.${ext}`
+        cb(null,fileName)
+    }
+})
+
+
+//multer filter object to filter out file uploads that are not images
+const fileFilter = function (req,file,cb){
+    
+    if(file.mimetype.split('/')[0] != 'image'){
+        cb(new AppError('Please file must be an image',401))
+    }
+
+    cb(null,true)
+}
+
+
+
+const upload = multer({storage,fileFilter})
+
+exports.uploadImage = upload.single('photo')
+
+
+//cleans up the request body to make sure only a given set of allowed fields can be updated
 const cleanUpRequestBody = (body,...allowedfields)=>{
     const newBody ={}
     console.log(Object.keys(body))
@@ -16,10 +49,15 @@ const cleanUpRequestBody = (body,...allowedfields)=>{
 
 exports.updateSelf = AsyncErrorCatcher(async (req,res,next)=>{
     console.log(req.body)
+    console.log(req.file)
     //ensure the updates are not password changes 
     if(req.body.password || req.body.confirmPassword) return next(new AppError('You can perform password update on this route use /forgotPassword instead'))
+    
+    if(req.file){
+        req.body.photo = req.file.filename
+    }
     //perform updates to user updates but only to specific field
-    const cleanedRequestBody = cleanUpRequestBody(req.body, "name","email")
+    const cleanedRequestBody = cleanUpRequestBody(req.body, "name","email","photo")
     const userUpdateObject = await User.findByIdAndUpdate(req.user._id,cleanedRequestBody,{
         runValidators:true,
         new:true

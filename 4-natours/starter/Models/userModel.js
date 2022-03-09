@@ -16,7 +16,10 @@ const userSchema = new mongoose.Schema({
         unique:true,
         lowercase:true
     },
-    photo:String,
+    photo:{
+        type:String,
+        default:'default.jpg'
+    },
     password : {
         type: String,
         required : [true,"The password field is required"],

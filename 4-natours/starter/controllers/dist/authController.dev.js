@@ -141,7 +141,6 @@ exports.login = asyncErrorCatcher(function _callee2(req, res, next) {
 });
 
 exports.logout = function (req, res) {
-  console.log('hy logout');
   res.cookie('jwt', 'chideraS', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true

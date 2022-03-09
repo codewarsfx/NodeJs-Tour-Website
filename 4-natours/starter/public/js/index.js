@@ -29,7 +29,6 @@ if(domElements.formElement){
 if(domElements.logOut){
     domElements.logOut.addEventListener('click',()=>{
         logoutUser()
-        
     })
 }
 
