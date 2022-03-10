@@ -42,7 +42,6 @@ exports.updateOne = Doc=>(
         const updatedDoc= await Doc.findByIdAndUpdate(req.params.id,req.body,{
            new:true,    
         })  
-        console.log(updatedDoc)
         res.status(201).json({
             "message": "success",
             "data": updatedDoc

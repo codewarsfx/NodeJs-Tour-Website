@@ -18,7 +18,7 @@ Router.route('distanceFrom/center/:latlng/unit/:mi').get(tourController.calcDist
 
 Router.route('/').get(tourController.getTours).post(authController.protect,authController.authorizeUser(['admin','lead-guide']),tourController.createTour)
 
-Router.route('/:id').patch(authController.protect,authController.authorizeUser(['admin','lead-guide']),tourController.updateTour).delete(authController.protect,authController.authorizeUser(['admin','tour-guide']),tourController.deleteTour).get(tourController.getTour)
+Router.route('/:id').patch(authController.protect,authController.authorizeUser(['admin','lead-guide']),tourController.uploadTours,tourController.processTourImagesUploaded,tourController.updateTour).delete(authController.protect,authController.authorizeUser(['admin','tour-guide']),tourController.deleteTour).get(tourController.getTour)
 
 
 

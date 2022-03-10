@@ -4,7 +4,58 @@
 const Tour = require('../Models/tourModels')
 const asyncErrorCatcher = require('../utils/AsyncErrorCatcher')
 const ControllerFactory = require("./ControllerFactory")
+const multer = require('multer')
+const sharp = require('sharp')
+const AppError = require('../utils/appError')
 
+
+const storage = multer.memoryStorage()
+const fileFilter = function (req,file,cb){
+    console.log(req)
+    
+    if(!file.mimetype.startsWith('image')) return cb(new AppError('Error Only images can be uploaded pleas',401));
+    
+    
+    cb(null,true)
+    
+}
+
+const upload = multer(storage,fileFilter)
+
+
+exports.uploadTours = upload.fields([{
+    name:'imageCover',maxCount:1
+},{
+    name:"images",
+    maxCount:"3"
+}])
+
+
+
+    exports.processTourImagesUploaded = asyncErrorCatcher(async (req,res,next)=>{ 
+        
+        console.log('hello')
+        
+        if(!req.files) return next()
+      
+        req.body.imageCover = `tour-${req.params.id}-${Date.now()}.jpg`
+         await sharp(req.files.imageCover[0].buffer).resize(2000,1333).toFormat('jpeg').jpeg({quality:90}).toFile(`starter/public/img/tours/${req.body.imageCover}`)
+      
+      
+      req.body.images =[]
+
+     await Promise.all(req.files.images.map(async (file,index)=>{
+          
+        const filename = `tour-${req.params.id}-${Date.now()}-${index + 1}.jpg`
+        req.body.images.push(filename) 
+        return  await sharp(file.buffer).resize(2000,1333).toFormat('jpeg').jpeg({quality:90}).toFile(`starter/public/img/tours/${filename}`) 
+      }))
+      
+      console.log(req.body)
+        
+        next()
+        
+    })
 
 
 exports.aliaseController = (req,res,next) =>{

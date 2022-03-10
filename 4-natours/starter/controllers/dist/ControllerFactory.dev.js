@@ -84,13 +84,12 @@ exports.updateOne = function (Doc) {
 
           case 2:
             updatedDoc = _context3.sent;
-            console.log(updatedDoc);
             res.status(201).json({
               "message": "success",
               "data": updatedDoc
             });
 
-          case 5:
+          case 4:
           case "end":
             return _context3.stop();
         }
