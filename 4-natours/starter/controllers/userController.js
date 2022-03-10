@@ -1,4 +1,5 @@
 const multer = require('multer')
+const sharp = require('sharp')
 
 const AsyncErrorCatcher = require('../utils/AsyncErrorCatcher');
 const AppError = require('../utils/appError')
@@ -7,21 +8,24 @@ const controllerFactory = require('./ControllerFactory')
 
 
 //multer storage configuration that configures the filename and destination of the file upload.
-const storage = multer.diskStorage({
-    destination:function(req,file,cb){
-        cb(null, 'starter/public/img/users')
-    },
-    filename:function(req,file,cb){
-        const ext = file.mimetype.split('/')[1]
-        const fileName = `user-${req.user.id}-${Date.now()}.${ext}`
-        cb(null,fileName)
-    }
-})
+// const storage = multer.diskStorage({
+//     destination:function(req,file,cb){
+//         cb(null, 'starter/public/img/users')
+//     },
+//     filename:function(req,file,cb){
+//         const ext = file.mimetype.split('/')[1]
+//         const fileName = `user-${req.user.id}-${Date.now()}.${ext}`
+//         cb(null,fileName)
+//     }
+// })
+
+
+//define type of multer storage
+const storage = multer.memoryStorage()
 
 
 //multer filter object to filter out file uploads that are not images
 const fileFilter = function (req,file,cb){
-    
     if(file.mimetype.split('/')[0] != 'image'){
         cb(new AppError('Please file must be an image',401))
     }
@@ -33,13 +37,27 @@ const fileFilter = function (req,file,cb){
 
 const upload = multer({storage,fileFilter})
 
+
+
+//image processing middleware 
+exports.processImage = AsyncErrorCatcher( async (req,res,next)=>{
+    //process the image to a dimension of 500*500 jpeg and quality 90% of the original then save to disk
+  if(!req.file) return next();
+  
+req.file.filename = `user-${req.user.id}-${Date.now()}.jpg`
+    
+  await  sharp(req.file.buffer).resize(500,500).toFormat('jpeg').jpeg({quality:90}).toFile(`starter/public/img/users/${req.file.filename}`)  
+  
+  next()
+})
+
+
 exports.uploadImage = upload.single('photo')
 
 
 //cleans up the request body to make sure only a given set of allowed fields can be updated
 const cleanUpRequestBody = (body,...allowedfields)=>{
     const newBody ={}
-    console.log(Object.keys(body))
     Object.keys(body).forEach(el=>{
         if (allowedfields.includes(el)) newBody[el] = body[el]
     })
@@ -48,8 +66,6 @@ const cleanUpRequestBody = (body,...allowedfields)=>{
 
 
 exports.updateSelf = AsyncErrorCatcher(async (req,res,next)=>{
-    console.log(req.body)
-    console.log(req.file)
     //ensure the updates are not password changes 
     if(req.body.password || req.body.confirmPassword) return next(new AppError('You can perform password update on this route use /forgotPassword instead'))
     
