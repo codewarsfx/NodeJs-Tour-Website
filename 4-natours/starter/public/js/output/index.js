@@ -531,7 +531,8 @@ const domElements = {
     currentPasswordElement: document.querySelector('#password-current'),
     newPasswordElement: document.querySelector('#password'),
     confirmPasswordELement: document.querySelector('#password-confirm'),
-    passwordFormElement: document.querySelector('.password-form')
+    passwordFormElement: document.querySelector('.password-form'),
+    fileUploadElement: document.getElementById('photo')
 };
 if (domElements.formElement) domElements.formElement.addEventListener('submit', (e)=>{
     e.preventDefault();
@@ -542,13 +543,12 @@ if (domElements.logOut) domElements.logOut.addEventListener('click', ()=>{
     _login.logoutUser();
 });
 if (domElements.formUserELement) domElements.formUserELement.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const nameValue = domElements.nameELement.value;
-    const emailValue = domElements.emailELement.value;
-    _updateUser.updateSetting({
-        nameValue,
-        emailValue
-    }, 'data');
+    e.preventDefault(domElements.fileUploadElement.files);
+    const form = new FormData();
+    form.append('nameValue', domElements.nameELement.value);
+    form.append('emailValue', domElements.emailELement.value);
+    form.append('photo', domElements.fileUploadElement.files[0]);
+    _updateUser.updateSetting(form, 'data');
 });
 const btn = document.querySelector('.btn-save-pass');
 if (btn) btn.addEventListener('click', ()=>{
@@ -2228,15 +2228,13 @@ var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
 var _alert = require("./alert");
 const updateSetting = async (userInfo, type)=>{
+    console.log(userInfo);
     const url = `/api/v1/users/${type === "password" ? "updatePassword" : "updateSelf"}`;
     const data = type === "password" ? {
         currentPassword: userInfo.currentPassword,
         newPassword: userInfo.newPassword,
         confirmPassword: userInfo.confirmPassword
-    } : {
-        email: userInfo.emailValue,
-        name: userInfo.nameValue
-    };
+    } : userInfo;
     try {
         const res = await _axiosDefault.default({
             method: 'patch',

@@ -14,7 +14,8 @@ var domElements = {
   currentPasswordElement: document.querySelector('#password-current'),
   newPasswordElement: document.querySelector('#password'),
   confirmPasswordELement: document.querySelector('#password-confirm'),
-  passwordFormElement: document.querySelector('.password-form')
+  passwordFormElement: document.querySelector('.password-form'),
+  fileUploadElement: document.getElementById('photo')
 };
 
 if (domElements.formElement) {
@@ -33,13 +34,12 @@ if (domElements.logOut) {
 
 if (domElements.formUserELement) {
   domElements.formUserELement.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var nameValue = domElements.nameELement.value;
-    var emailValue = domElements.emailELement.value;
-    (0, _updateUser.updateSetting)({
-      nameValue: nameValue,
-      emailValue: emailValue
-    }, 'data');
+    e.preventDefault(domElements.fileUploadElement.files);
+    var form = new FormData();
+    form.append('nameValue', domElements.nameELement.value);
+    form.append('emailValue', domElements.emailELement.value);
+    form.append('photo', domElements.fileUploadElement.files[0]);
+    (0, _updateUser.updateSetting)(form, 'data');
   });
 }
 
