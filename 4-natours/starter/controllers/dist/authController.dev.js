@@ -18,7 +18,7 @@ var UserModel = require('../Models/userModel');
 
 var AppError = require('../utils/appError');
 
-var sendEmail = require('../utils/email'); //private function to sign JWTs
+var Email = require('../utils/email'); //private function to sign JWTs
 
 
 var signJWT = function signJWT(id, response, statusCode, userData) {
@@ -63,7 +63,7 @@ var signJWT = function signJWT(id, response, statusCode, userData) {
 
 
 exports.signup = asyncErrorCatcher(function _callee(req, res) {
-  var userData;
+  var userData, url;
   return regeneratorRuntime.async(function _callee$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
@@ -73,9 +73,14 @@ exports.signup = asyncErrorCatcher(function _callee(req, res) {
 
         case 2:
           userData = _context2.sent;
+          url = "".concat(req.protocol, "://").concat(req.get('host'), "/me");
+          _context2.next = 6;
+          return regeneratorRuntime.awrap(new Email(userData, url).sendWelcome());
+
+        case 6:
           signJWT(userData._id, res, 201, userData);
 
-        case 4:
+        case 7:
         case "end":
           return _context2.stop();
       }

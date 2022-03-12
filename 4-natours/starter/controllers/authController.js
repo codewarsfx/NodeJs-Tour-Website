@@ -4,7 +4,8 @@ const crypto = require('crypto')
 const asyncErrorCatcher = require('../utils/AsyncErrorCatcher')
 const UserModel = require('../Models/userModel')
 const AppError = require('../utils/appError')
-const sendEmail = require('../utils/email')
+const Email = require('../utils/email')
+
 
 //private function to sign JWTs
 const signJWT = async (id,response,statusCode,userData) => {
@@ -38,13 +39,13 @@ const signJWT = async (id,response,statusCode,userData) => {
 exports.signup = asyncErrorCatcher(async (req,res)=>{
     const userData = await UserModel.create(req.body)
     
+    const url =`${req.protocol}://${req.get('host')}/me`
+    
+    await new Email(userData, url).sendWelcome()
+    
     signJWT(userData._id,res,201,userData)
-    
-    
-    
-    
-})
 
+})
 
 
 
