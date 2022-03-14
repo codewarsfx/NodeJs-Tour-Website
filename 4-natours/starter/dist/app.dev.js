@@ -30,6 +30,8 @@ var AppError = require('./utils/appError');
 
 var reviewRouter = require('./routes/reviewRoutes');
 
+var bookingsRouter = require('./routes/bookingsRoute');
+
 var errorController = require('./controllers/errorController');
 
 var app = express(); //setting up the pug template 
@@ -71,6 +73,7 @@ app.use('/', viewRouter); //api routes
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingsRouter);
 app.all('*', function (req, res, next) {
   next(new AppError("Sorry the resource ".concat(req.originalUrl, " does not exist"), 404));
 }); //general error middleware

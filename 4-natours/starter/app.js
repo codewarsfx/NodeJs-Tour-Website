@@ -17,6 +17,7 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError')
 const reviewRouter = require('./routes/reviewRoutes')
+const bookingsRouter = require('./routes/bookingsRoute')
 const errorController = require('./controllers/errorController')
 
 
@@ -88,6 +89,7 @@ app.use('/',viewRouter)
 app.use('/api/v1/tours',tourRouter)
 app.use('/api/v1/users',userRouter)
 app.use('/api/v1/reviews',reviewRouter)
+app.use('/api/v1/bookings',bookingsRouter)
 app.all('*',(req, res, next) =>{
      
      next(new AppError(`Sorry the resource ${req.originalUrl} does not exist`,404))
