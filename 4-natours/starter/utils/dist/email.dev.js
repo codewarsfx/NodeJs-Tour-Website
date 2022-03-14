@@ -39,7 +39,7 @@ function () {
                 break;
               }
 
-              return _context.abrupt("return", this.transporter = nodemail.createTransport(nodemailerSengrid({
+              return _context.abrupt("return", this.transporter = nodemailer.createTransport(nodemailerSengrid({
                 apiKey: process.env.SENDGRID_API_KEY
               })));
 

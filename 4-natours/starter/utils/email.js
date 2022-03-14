@@ -16,7 +16,7 @@ module.exports = class{
   async createTransport(){
     if(process.env.NODE_ENV == "production"){
       
-      return this.transporter = nodemail.createTransport(
+      return this.transporter = nodemailer.createTransport(
         nodemailerSengrid({
           apiKey: process.env.SENDGRID_API_KEY}
         )
