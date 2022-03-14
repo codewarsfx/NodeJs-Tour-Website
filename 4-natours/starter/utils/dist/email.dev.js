@@ -124,6 +124,23 @@ function () {
         }
       }, null, this);
     }
+  }, {
+    key: "sendPasswordReset",
+    value: function sendPasswordReset() {
+      return regeneratorRuntime.async(function sendPasswordReset$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return regeneratorRuntime.awrap(this.sendEmail('emailReset', "PASSWORD_RESET TOKEN FOR ".concat(this.to, " ")));
+
+            case 2:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
   }]);
 
   return _class;

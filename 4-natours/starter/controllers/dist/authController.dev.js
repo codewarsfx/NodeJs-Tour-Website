@@ -332,30 +332,27 @@ exports.forgotPassword = asyncErrorCatcher(function _callee5(req, res, next) {
           resetPasswordUrl = "".concat(req.protocol, "://").concat(req.get('host'), "/api/v1/users/resetPassword/").concat(userToken);
           _context6.prev = 10;
           _context6.next = 13;
-          return regeneratorRuntime.awrap(sendEmail({
-            email: req.body.email,
-            subject: "Password request token for ".concat(req.body.email),
-            message: "Please click on the link ".concat(resetPasswordUrl, " to reset your password. The reset token expires in 10 minutes")
-          }));
+          return regeneratorRuntime.awrap(new Email(userWithEmail, resetPasswordUrl).sendPasswordReset());
 
         case 13:
           res.status(200).json({
             "message": "Password reset token sent"
           });
-          _context6.next = 22;
+          _context6.next = 23;
           break;
 
         case 16:
           _context6.prev = 16;
           _context6.t0 = _context6["catch"](10);
+          console.log(_context6.t0);
           next(new AppError('An error occured in sending the password reset mail', 500));
           userWithEmail.resetToken = undefined;
           userWithEmail.resetTokenExpires = undefined;
-          userWithEmail({
+          userWithEmail.save({
             validateBeforeSave: false
           });
 
-        case 22:
+        case 23:
         case "end":
           return _context6.stop();
       }

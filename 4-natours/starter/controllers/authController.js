@@ -184,22 +184,19 @@ exports.forgotPassword = asyncErrorCatcher( async (req,res,next) => {
    const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${userToken}`
    
    try {
-       await sendEmail({
-       email:req.body.email,
-       subject:`Password request token for ${req.body.email}`,
-       message:`Please click on the link ${resetPasswordUrl} to reset your password. The reset token expires in 10 minutes`
-   })
-   
-   res.status(200).json({
+    await new Email(userWithEmail, resetPasswordUrl).sendPasswordReset()
+  
+     res.status(200).json({
        "message":"Password reset token sent"
    })
    }
    catch(error){
+       console.log(error)
        next(new AppError('An error occured in sending the password reset mail',500))
        userWithEmail.resetToken= undefined
        userWithEmail.resetTokenExpires = undefined
        
-       userWithEmail({
+       userWithEmail.save({
            validateBeforeSave: false
        })
    }

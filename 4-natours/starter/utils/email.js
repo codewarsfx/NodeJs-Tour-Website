@@ -38,7 +38,7 @@ module.exports = class{
     
     const html = await pug.renderFile(`${__dirname}/../views/email/${template}.pug`,{
       url:this.url,
-      firstName:this.firstName
+      firstName:this.firstName,
     })
     
     const text = await  htmlToText(html)
@@ -58,8 +58,14 @@ module.exports = class{
     
   }
   
+  
+  
   async sendWelcome(){
     await this.sendEmail('welcome','WELCOME')
+  }
+  
+  async sendPasswordReset(){
+    await this.sendEmail('emailReset',`PASSWORD_RESET TOKEN FOR ${this.to} `)
   }
 }
 
