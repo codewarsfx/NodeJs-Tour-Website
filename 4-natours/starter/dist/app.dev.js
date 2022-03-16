@@ -17,7 +17,9 @@ var preventParameterPollution = require('hpp');
 
 var path = require('path');
 
-var cookieParser = require('cookie-parser'); //internal project modules
+var cookieParser = require('cookie-parser');
+
+var contentSecurityPolicy = require("helmet-csp"); //internal project modules
 
 
 var viewRouter = require('./routes/viewRoutes');
@@ -65,8 +67,20 @@ app.use(preventParameterPollution({
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan("dev"));
-} //views routes
+}
 
+app.use(contentSecurityPolicy({
+  useDefaults: true,
+  directives: {
+    defaultSrc: ["'self'", "default.example"],
+    scriptSrc: ["'self'", "js.example.com", "https://js.stripe.com", "https://checkout.stripe.com"],
+    objectSrc: ["'none'"],
+    frameSrc: ["'self'", "https://hooks.stripe.com", "https://js.stripe.com", "https://checkout.stripe.com"],
+    connectSrc: ["'self'", "https://checkout.stripe.com", "https://api.stripe.com"],
+    upgradeInsecureRequests: []
+  },
+  reportOnly: false
+})); //views routes
 
 app.use('/', viewRouter); //api routes
 

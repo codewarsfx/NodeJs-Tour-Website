@@ -102,4 +102,7 @@ section.section-cta
     .cta__content
       h2.heading-secondary What are you waiting for?
       p.cta__text 10 days. 1 adventure. Infinite memories. Make it yours today!
-      button.btn.btn--green.span-all-rows Book tour now!
+      if(user)
+        button.btn.btn--green.span-all-rows Book tour now!
+      else 
+        button.btn.btn--green.span-all-rows Log In to Book tours 

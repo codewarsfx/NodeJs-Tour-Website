@@ -17,7 +17,8 @@ exports.createSession = asyncErrorCatcher(function _callee(req, res) {
 
         case 2:
           tour = _context.sent;
-          _context.next = 5;
+          console.log("https://www.natours.dev/img/tours/".concat(tour.imageCover));
+          _context.next = 6;
           return regeneratorRuntime.awrap(stripe.checkout.sessions.create({
             "cancel_url": "".concat(req.protocol, "://").concat(req.get('host'), "/tours"),
             "success_url": "".concat(req.protocol, "://").concat(req.get('host'), "/tours/").concat(tour.slug),
@@ -34,12 +35,11 @@ exports.createSession = asyncErrorCatcher(function _callee(req, res) {
             }]
           }));
 
-        case 5:
+        case 6:
           session = _context.sent;
-          console.log(session);
           res.status(200).json({
             "status": "ok",
-            session: session
+            url: session.url
           });
 
         case 8:

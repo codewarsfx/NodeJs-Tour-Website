@@ -8,6 +8,7 @@ const xssClean = require('xss-clean')
 const preventParameterPollution = require('hpp')
 const path = require('path')
 const cookieParser = require('cookie-parser')
+const contentSecurityPolicy = require("helmet-csp")
 
 
 
@@ -76,6 +77,20 @@ if(process.env.NODE_ENV === 'development'){
      app.use(morgan("dev"))
 }
 
+app.use(
+  contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      defaultSrc: ["'self'", "default.example"],
+      scriptSrc: ["'self'", "js.example.com","https://js.stripe.com","https://checkout.stripe.com"],
+      objectSrc: ["'none'"],
+      frameSrc:["'self'","https://hooks.stripe.com","https://js.stripe.com","https://checkout.stripe.com"],
+      connectSrc:["'self'","https://checkout.stripe.com","https://api.stripe.com"],
+      upgradeInsecureRequests: [],
+    },
+    reportOnly: false,
+  })
+);
 
 
 

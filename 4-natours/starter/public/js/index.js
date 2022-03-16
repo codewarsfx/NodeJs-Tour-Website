@@ -1,5 +1,6 @@
 import {loginUser, logoutUser} from './login'
 import {updateSetting, updateUserInfo} from './updateUser'
+import {checkoutStripe} from './stripe'
 
 
 
@@ -13,7 +14,18 @@ const domElements = {
     currentPasswordElement: document.querySelector('#password-current'),
     newPasswordElement : document.querySelector('#password'),
     confirmPasswordELement: document.querySelector('#password-confirm'),
-    passwordFormElement:document.querySelector('.password-form'),fileUploadElement: document.getElementById('photo')
+    passwordFormElement:document.querySelector('.password-form'),fileUploadElement: document.getElementById('photo'),
+    buttonElement: document.querySelector('.checkout-button')
+}
+
+if(domElements.buttonElement){
+    domElements.buttonElement.addEventListener('click',()=>{
+        const tourID = domElements.buttonElement.dataset.tour
+   
+        checkoutStripe(tourID)
+    })
+    
+    
 }
 
 

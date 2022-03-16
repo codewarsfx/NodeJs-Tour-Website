@@ -4,9 +4,9 @@ const stripe = require('stripe')('sk_test_51IjOtBLlSmsaw58gsTlo3DGfHO2kbkKpJb3f4
 
 
 exports.createSession = asyncErrorCatcher( async (req,res)=>{
-    
+
     const tour =  await Tour.findById(req.params.tourId)
-    
+        console.log(`https://www.natours.dev/img/tours/${tour.imageCover}`)
     const session = await stripe.checkout.sessions.create({
          "cancel_url":`${req.protocol}://${req.get('host')}/tours`,
          "success_url":`${req.protocol}://${req.get('host')}/tours/${tour.slug}`,
@@ -25,11 +25,9 @@ exports.createSession = asyncErrorCatcher( async (req,res)=>{
          }]     
     })
     
-    console.log(session)
-    
     res.status(200).json({
         "status":"ok",
-        session
+        url:session.url
     })
     
 })

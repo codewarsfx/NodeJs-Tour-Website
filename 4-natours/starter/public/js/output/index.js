@@ -521,6 +521,7 @@ function hmrAcceptRun(bundle, id) {
 },{}],"hstOJ":[function(require,module,exports) {
 var _login = require("./login");
 var _updateUser = require("./updateUser");
+var _stripe = require("./stripe");
 const domElements = {
     emailELement: document.querySelector('#email'),
     nameELement: document.querySelector('#name'),
@@ -532,8 +533,13 @@ const domElements = {
     newPasswordElement: document.querySelector('#password'),
     confirmPasswordELement: document.querySelector('#password-confirm'),
     passwordFormElement: document.querySelector('.password-form'),
-    fileUploadElement: document.getElementById('photo')
+    fileUploadElement: document.getElementById('photo'),
+    buttonElement: document.querySelector('.checkout-button')
 };
+if (domElements.buttonElement) domElements.buttonElement.addEventListener('click', ()=>{
+    const tourID = domElements.buttonElement.dataset.tour;
+    _stripe.checkoutStripe(tourID);
+});
 if (domElements.formElement) domElements.formElement.addEventListener('submit', (e)=>{
     e.preventDefault();
     emailValue = domElements.emailELement.value, passwordValue = domElements.passwordElement.value;
@@ -567,7 +573,7 @@ if (domElements.passwordFormElement) domElements.passwordFormElement.addEventLis
     btn.textContent = 'Save password';
 });
 
-},{"./login":"iQIc4","./updateUser":"fQ5FR"}],"iQIc4":[function(require,module,exports) {
+},{"./login":"iQIc4","./updateUser":"fQ5FR","./stripe":"809gt"}],"iQIc4":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "loginUser", ()=>loginUser
@@ -2250,6 +2256,21 @@ const updateSetting = async (userInfo, type)=>{
     }
 };
 
-},{"axios":"jo6P5","./alert":"eGrZS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["aXKb2","hstOJ"], "hstOJ", "parcelRequire1a69")
+},{"axios":"jo6P5","./alert":"eGrZS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"809gt":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "checkoutStripe", ()=>checkoutStripe
+);
+var _axios = require("axios");
+var _axiosDefault = parcelHelpers.interopDefault(_axios);
+const checkoutStripe = async (tourID)=>{
+    const res = await _axiosDefault.default({
+        method: 'post',
+        url: `/api/v1/bookings/bookings-sessions/${tourID}`
+    });
+    window.location.replace(res.data.url);
+};
+
+},{"axios":"jo6P5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["aXKb2","hstOJ"], "hstOJ", "parcelRequire1a69")
 
 //# sourceMappingURL=index.js.map

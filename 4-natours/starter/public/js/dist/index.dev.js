@@ -4,6 +4,8 @@ var _login = require("./login");
 
 var _updateUser = require("./updateUser");
 
+var _stripe = require("./stripe");
+
 var domElements = {
   emailELement: document.querySelector('#email'),
   nameELement: document.querySelector('#name'),
@@ -15,8 +17,16 @@ var domElements = {
   newPasswordElement: document.querySelector('#password'),
   confirmPasswordELement: document.querySelector('#password-confirm'),
   passwordFormElement: document.querySelector('.password-form'),
-  fileUploadElement: document.getElementById('photo')
+  fileUploadElement: document.getElementById('photo'),
+  buttonElement: document.querySelector('.checkout-button')
 };
+
+if (domElements.buttonElement) {
+  domElements.buttonElement.addEventListener('click', function () {
+    var tourID = domElements.buttonElement.dataset.tour;
+    (0, _stripe.checkoutStripe)(tourID);
+  });
+}
 
 if (domElements.formElement) {
   domElements.formElement.addEventListener('submit', function (e) {
