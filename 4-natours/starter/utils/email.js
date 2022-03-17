@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const nodemailerSengrid = require('nodemailer-sendgrid')
 const pug = require('pug')
-const {htmlToText} = require('html-to-text')
+const {htmlToText} = require('html-to-text');
 
 module.exports = class{
   constructor(user,url){
@@ -9,7 +9,6 @@ module.exports = class{
     this.firstName = user.name.split(' ')[0]
     this.to = user.email
     this.from = `Chidera Innocent ${process.env.SENDER_EMAIL }`
-    
   }
   
   
