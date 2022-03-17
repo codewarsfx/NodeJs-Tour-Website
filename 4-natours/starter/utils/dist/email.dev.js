@@ -145,3 +145,5 @@ function () {
 
   return _class;
 }();
+
+console.log('h');
