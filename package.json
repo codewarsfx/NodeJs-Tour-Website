@@ -10,7 +10,7 @@
     "dev": " nodemon ./starter/server.js",
     "start:prod": "NODE_ENV=production nodemon starter/server.js",
     "debug": "ndb starter/server.js",
-    "watch": "parcel build ./starter/public/js/index.js --dist-dir ./starter/public/js/output "
+    "watch": "parcel ./starter/public/js/index.js --dist-dir ./starter/public/js/output "
   },
   "author": "Innocent chidera Shammah",
   "license": "ISC",
