@@ -6,6 +6,8 @@ var asyncErrorCatcher = require('../utils/AsyncErrorCatcher');
 
 var Tour = require('../Models/tourModels');
 
+var Booking = require('../Models/bookingsModel');
+
 exports.getOverview = asyncErrorCatcher(function _callee(req, res) {
   var tourData;
   return regeneratorRuntime.async(function _callee$(_context) {
@@ -69,3 +71,41 @@ exports.userAccount = function (req, res) {
     title: 'User account page'
   });
 };
+
+exports.getUserBookings = asyncErrorCatcher(function _callee3(req, res) {
+  var bookingsOnUser, tourIDs, tourData;
+  return regeneratorRuntime.async(function _callee3$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.next = 2;
+          return regeneratorRuntime.awrap(Booking.find({
+            user: req.user.id
+          }));
+
+        case 2:
+          bookingsOnUser = _context3.sent;
+          tourIDs = bookingsOnUser.map(function (ob) {
+            return ob.tour;
+          });
+          _context3.next = 6;
+          return regeneratorRuntime.awrap(Tour.find({
+            _id: {
+              $in: tourIDs
+            }
+          }));
+
+        case 6:
+          tourData = _context3.sent;
+          res.status(200).render('overview', {
+            title: " Your Bookings ",
+            tourData: tourData
+          });
+
+        case 8:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+});

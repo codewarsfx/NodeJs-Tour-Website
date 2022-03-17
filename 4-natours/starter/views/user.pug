@@ -1,7 +1,7 @@
 extends base
-mixin list-Item(active,icon,description)
+mixin list-Item(nav,active,icon,description)
     li(class=`${active?'side-nav--active':''}`)
-        a(href='#')
+        a(href=`${nav}`)
             svg
                 use(xlink:href=`/img/icons.svg#icon-${icon}`)        
             | #{description}      
@@ -10,18 +10,18 @@ block content
         .user-view
             nav.user-view__menu
                 ul.side-nav
-                    +list-Item(true,'settings','Settings')
-                    +list-Item(false,'briefcase', 'My bookings')
-                    +list-Item(false,'star', 'My reviews')
-                    +list-Item(false,'credit-card', 'Billing')
+                    +list-Item("#",true,'settings','Settings')
+                    +list-Item("/getBookings",false,'briefcase', 'My bookings')
+                    +list-Item("#",false,'star', 'My reviews')
+                    +list-Item("#",false,'credit-card', 'Billing')
                 -if(user.role=='admin')
                     .admin-nav
                         h5.admin-nav__heading Admin
                         ul.side-nav
-                            +list-Item(false,'map','Manage tours')
-                            +list-Item(false,'users','Manage users')
-                            +list-Item(false,'star','Manage reviews')
-                            +list-Item(false,'briefcase','Manage bookings')
+                            +list-Item("#",false,'map','Manage tours')
+                            +list-Item("#",false,'users','Manage users')
+                            +list-Item("#",false,'star','Manage reviews')
+                            +list-Item("#",false,'briefcase','Manage bookings')
                         
             .user-view__content
                 .user-view__form-container

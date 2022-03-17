@@ -19,10 +19,13 @@ const domElements = {
 }
 
 if(domElements.buttonElement){
-    domElements.buttonElement.addEventListener('click',()=>{
+    domElements.buttonElement.addEventListener('click',async(e)=>{
+        e.target.textContent ='processing...'
+        
         const tourID = domElements.buttonElement.dataset.tour
-   
-        checkoutStripe(tourID)
+       await  checkoutStripe(tourID)
+       
+       e.target.textContent ='Book a Tour '
     })
     
     

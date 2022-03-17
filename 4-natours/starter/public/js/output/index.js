@@ -536,9 +536,11 @@ const domElements = {
     fileUploadElement: document.getElementById('photo'),
     buttonElement: document.querySelector('.checkout-button')
 };
-if (domElements.buttonElement) domElements.buttonElement.addEventListener('click', ()=>{
+if (domElements.buttonElement) domElements.buttonElement.addEventListener('click', async (e)=>{
+    e.target.textContent = 'processing...';
     const tourID = domElements.buttonElement.dataset.tour;
-    _stripe.checkoutStripe(tourID);
+    await _stripe.checkoutStripe(tourID);
+    e.target.textContent = 'Book a Tour ';
 });
 if (domElements.formElement) domElements.formElement.addEventListener('submit', (e)=>{
     e.preventDefault();

@@ -22,9 +22,23 @@ var domElements = {
 };
 
 if (domElements.buttonElement) {
-  domElements.buttonElement.addEventListener('click', function () {
-    var tourID = domElements.buttonElement.dataset.tour;
-    (0, _stripe.checkoutStripe)(tourID);
+  domElements.buttonElement.addEventListener('click', function _callee(e) {
+    var tourID;
+    return regeneratorRuntime.async(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            e.target.textContent;
+            tourID = domElements.buttonElement.dataset.tour;
+            _context.next = 4;
+            return regeneratorRuntime.awrap((0, _stripe.checkoutStripe)(tourID));
+
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }
+    });
   });
 }
 
@@ -62,17 +76,17 @@ if (btn) {
 }
 
 if (domElements.passwordFormElement) {
-  domElements.passwordFormElement.addEventListener('submit', function _callee(e) {
+  domElements.passwordFormElement.addEventListener('submit', function _callee2(e) {
     var currentPassword, newPassword, confirmPassword;
-    return regeneratorRuntime.async(function _callee$(_context) {
+    return regeneratorRuntime.async(function _callee2$(_context2) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context2.prev = _context2.next) {
           case 0:
             e.preventDefault();
             currentPassword = domElements.currentPasswordElement.value;
             newPassword = domElements.newPasswordElement.value;
             confirmPassword = domElements.confirmPasswordELement.value;
-            _context.next = 6;
+            _context2.next = 6;
             return regeneratorRuntime.awrap((0, _updateUser.updateSetting)({
               currentPassword: currentPassword,
               newPassword: newPassword,
@@ -84,7 +98,7 @@ if (domElements.passwordFormElement) {
 
           case 7:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
       }
     });

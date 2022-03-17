@@ -133,8 +133,7 @@ tourSchema.pre('save', function (next) {
 
 tourSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "guides",
-    select: "-__v "
+    path: "guides"
   });
   next();
 }); //query selector to filer out tours marked as secret 

@@ -1,6 +1,7 @@
 const path = require('path')
 const asyncErrorCatcher = require('../utils/AsyncErrorCatcher')
 const Tour = require('../Models/tourModels')
+const Booking = require('../Models/bookingsModel')
 
 
 exports.getOverview = asyncErrorCatcher(async (req,res)=>{
@@ -44,3 +45,25 @@ exports.userAccount = (req,res) =>{
 
     
 }
+
+exports.getUserBookings =  asyncErrorCatcher(
+    async (req,res)=>{
+        
+        const bookingsOnUser = await Booking.find({user:req.user.id})
+        
+        const tourIDs = bookingsOnUser.map(ob => ob.tour )
+        const   tourData = await Tour.find({_id:{$in:tourIDs}})
+        
+       
+        
+        res.status(200).render('overview',
+            {
+        title:" Your Bookings ",
+         tourData
+    }
+        )  
+    }
+    
+    
+    
+)
