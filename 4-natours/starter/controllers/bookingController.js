@@ -8,10 +8,6 @@ const stripe = require('stripe')('sk_test_51IjOtBLlSmsaw58gsTlo3DGfHO2kbkKpJb3f4
 exports.createSession = asyncErrorCatcher( async (req,res)=>{
 
     const tour =  await Tour.findById(req.params.tourId)
-    
-    console.log(`${req.protocol}://${req.get('host')}/?tour=${tour._id}&user=${req.user.id}&price=${tour.price}&paid=true`)
-    
-
     const session = await stripe.checkout.sessions.create({
          "cancel_url":`${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
          "success_url":`${req.protocol}://${req.get('host')}/?tour=${tour._id}&user=${req.user.id}&price=${tour.price}&paid=true`,
@@ -49,7 +45,6 @@ exports.createBookings = asyncErrorCatcher(
             price,
             paid
         })
-        console.log(`${req.originalUrl.split('?')[0]}`)
         
         res.redirect(301,`${req.originalUrl.split('?')[0]}`)
         

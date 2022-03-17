@@ -11,8 +11,7 @@ const AppError = require('../utils/appError')
 
 const storage = multer.memoryStorage()
 const fileFilter = function (req,file,cb){
-    console.log(req)
-    
+
     if(!file.mimetype.startsWith('image')) return cb(new AppError('Error Only images can be uploaded pleas',401));
     
     
@@ -33,9 +32,7 @@ exports.uploadTours = upload.fields([{
 
 
     exports.processTourImagesUploaded = asyncErrorCatcher(async (req,res,next)=>{ 
-        
-        console.log('hello')
-        
+
         if(!req.files) return next()
       
         req.body.imageCover = `tour-${req.params.id}-${Date.now()}.jpg`
@@ -50,9 +47,7 @@ exports.uploadTours = upload.fields([{
         req.body.images.push(filename) 
         return  await sharp(file.buffer).resize(2000,1333).toFormat('jpeg').jpeg({quality:90}).toFile(`starter/public/img/tours/${filename}`) 
       }))
-      
-      console.log(req.body)
-        
+    
         next()
         
     })

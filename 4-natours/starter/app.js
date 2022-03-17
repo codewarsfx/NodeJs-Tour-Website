@@ -9,6 +9,7 @@ const preventParameterPollution = require('hpp')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const contentSecurityPolicy = require("helmet-csp")
+const compression = require('compression')
 
 
 
@@ -77,6 +78,8 @@ if(process.env.NODE_ENV === 'development'){
      app.use(morgan("dev"))
 }
 
+
+//middleware for setting csp headers
 app.use(
   contentSecurityPolicy({
     useDefaults: true,
@@ -92,7 +95,8 @@ app.use(
   })
 );
 
-
+//middle ware for compressing application responses 
+app.use(compression())
 
 //views routes
 app.use('/',viewRouter)

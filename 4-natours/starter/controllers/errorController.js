@@ -1,7 +1,7 @@
 
 const AppError = require("../utils/appError")
 
-const handleDevelopmentErrors = (err,res) => {
+const handleDevelopmentErrors = (err,req,res) => {
      res.status(err.statusCode).json({
           err,
           status: err.status,
@@ -61,7 +61,6 @@ const handleTokenExpiredrrors = ()=> new AppError('Error, Expired Token. Please 
 
 //Global handling error middleware
 module.exports = (error,req,res,next) =>{
-     console.log(error.message)
      error.statusCode = error.statusCode  || 500
      error.status = error.status || "error"
      

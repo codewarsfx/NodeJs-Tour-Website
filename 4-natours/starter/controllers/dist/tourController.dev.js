@@ -23,7 +23,6 @@ var AppError = require('../utils/appError');
 var storage = multer.memoryStorage();
 
 var fileFilter = function fileFilter(req, file, cb) {
-  console.log(req);
   if (!file.mimetype.startsWith('image')) return cb(new AppError('Error Only images can be uploaded pleas', 401));
   cb(null, true);
 };
@@ -41,25 +40,23 @@ exports.processTourImagesUploaded = asyncErrorCatcher(function _callee2(req, res
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          console.log('hello');
-
           if (req.files) {
-            _context2.next = 3;
+            _context2.next = 2;
             break;
           }
 
           return _context2.abrupt("return", next());
 
-        case 3:
+        case 2:
           req.body.imageCover = "tour-".concat(req.params.id, "-").concat(Date.now(), ".jpg");
-          _context2.next = 6;
+          _context2.next = 5;
           return regeneratorRuntime.awrap(sharp(req.files.imageCover[0].buffer).resize(2000, 1333).toFormat('jpeg').jpeg({
             quality: 90
           }).toFile("starter/public/img/tours/".concat(req.body.imageCover)));
 
-        case 6:
+        case 5:
           req.body.images = [];
-          _context2.next = 9;
+          _context2.next = 8;
           return regeneratorRuntime.awrap(Promise.all(req.files.images.map(function _callee(file, index) {
             var filename;
             return regeneratorRuntime.async(function _callee$(_context) {
@@ -84,11 +81,10 @@ exports.processTourImagesUploaded = asyncErrorCatcher(function _callee2(req, res
             });
           })));
 
-        case 9:
-          console.log(req.body);
+        case 8:
           next();
 
-        case 11:
+        case 9:
         case "end":
           return _context2.stop();
       }

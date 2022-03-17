@@ -191,7 +191,6 @@ exports.forgotPassword = asyncErrorCatcher( async (req,res,next) => {
    })
    }
    catch(error){
-       console.log(error)
        next(new AppError('An error occured in sending the password reset mail',500))
        userWithEmail.resetToken= undefined
        userWithEmail.resetTokenExpires = undefined

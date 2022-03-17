@@ -338,13 +338,12 @@ exports.forgotPassword = asyncErrorCatcher(function _callee5(req, res, next) {
           res.status(200).json({
             "message": "Password reset token sent"
           });
-          _context6.next = 23;
+          _context6.next = 22;
           break;
 
         case 16:
           _context6.prev = 16;
           _context6.t0 = _context6["catch"](10);
-          console.log(_context6.t0);
           next(new AppError('An error occured in sending the password reset mail', 500));
           userWithEmail.resetToken = undefined;
           userWithEmail.resetTokenExpires = undefined;
@@ -352,7 +351,7 @@ exports.forgotPassword = asyncErrorCatcher(function _callee5(req, res, next) {
             validateBeforeSave: false
           });
 
-        case 23:
+        case 22:
         case "end":
           return _context6.stop();
       }

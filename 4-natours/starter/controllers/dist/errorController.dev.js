@@ -8,7 +8,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var AppError = require("../utils/appError");
 
-var handleDevelopmentErrors = function handleDevelopmentErrors(err, res) {
+var handleDevelopmentErrors = function handleDevelopmentErrors(err, req, res) {
   res.status(err.statusCode).json({
     err: err,
     status: err.status,
@@ -59,7 +59,6 @@ var handleTokenExpiredrrors = function handleTokenExpiredrrors() {
 
 
 module.exports = function (error, req, res, next) {
-  console.log(error.message);
   error.statusCode = error.statusCode || 500;
   error.status = error.status || "error";
 

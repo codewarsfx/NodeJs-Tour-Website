@@ -19,7 +19,9 @@ var path = require('path');
 
 var cookieParser = require('cookie-parser');
 
-var contentSecurityPolicy = require("helmet-csp"); //internal project modules
+var contentSecurityPolicy = require("helmet-csp");
+
+var compression = require('compression'); //internal project modules
 
 
 var viewRouter = require('./routes/viewRoutes');
@@ -67,7 +69,8 @@ app.use(preventParameterPollution({
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan("dev"));
-}
+} //middleware for setting csp headers
+
 
 app.use(contentSecurityPolicy({
   useDefaults: true,
@@ -80,7 +83,9 @@ app.use(contentSecurityPolicy({
     upgradeInsecureRequests: []
   },
   reportOnly: false
-})); //views routes
+})); //middle ware for compressing application responses 
+
+app.use(compression()); //views routes
 
 app.use('/', viewRouter); //api routes
 

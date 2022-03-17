@@ -21,8 +21,7 @@ exports.createSession = asyncErrorCatcher(function _callee(req, res) {
 
         case 2:
           tour = _context.sent;
-          console.log("".concat(req.protocol, "://").concat(req.get('host'), "/?tour=").concat(tour._id, "&user=").concat(req.user.id, "&price=").concat(tour.price, "&paid=true"));
-          _context.next = 6;
+          _context.next = 5;
           return regeneratorRuntime.awrap(stripe.checkout.sessions.create({
             "cancel_url": "".concat(req.protocol, "://").concat(req.get('host'), "/tour/").concat(tour.slug),
             "success_url": "".concat(req.protocol, "://").concat(req.get('host'), "/?tour=").concat(tour._id, "&user=").concat(req.user.id, "&price=").concat(tour.price, "&paid=true"),
@@ -39,14 +38,14 @@ exports.createSession = asyncErrorCatcher(function _callee(req, res) {
             }]
           }));
 
-        case 6:
+        case 5:
           session = _context.sent;
           res.status(200).json({
             "status": "ok",
             url: session.url
           });
 
-        case 8:
+        case 7:
         case "end":
           return _context.stop();
       }
@@ -80,11 +79,10 @@ exports.createBookings = asyncErrorCatcher(function _callee2(req, res, next) {
 
         case 5:
           booking = _context2.sent;
-          console.log("".concat(req.originalUrl.split('?')[0]));
           res.redirect(301, "".concat(req.originalUrl.split('?')[0]));
           next();
 
-        case 9:
+        case 8:
         case "end":
           return _context2.stop();
       }
