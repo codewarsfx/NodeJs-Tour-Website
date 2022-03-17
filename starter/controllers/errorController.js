@@ -1,14 +1,14 @@
 
 const AppError = require("../utils/appError")
 
-const handleDevelopmentErrors = (err,req,res) => {
-     console.log(err)
-     // res.status(err.statusCode).json({
-     //      err,
-     //      status: err.status,
-     //      message: err.message,
-     //      stack: err.stack
-     // })
+const handleDevelopmentErrors = (err,res) => {
+     
+     res.status(err.statusCode).json({
+          err,
+          status: err.status,
+          message: err.message,
+          stack: err.stack
+     })
 }
 
 
