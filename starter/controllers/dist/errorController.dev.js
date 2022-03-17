@@ -9,12 +9,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var AppError = require("../utils/appError");
 
 var handleDevelopmentErrors = function handleDevelopmentErrors(err, req, res) {
-  res.status(err.statusCode).json({
-    err: err,
-    status: err.status,
-    message: err.message,
-    stack: err.stack
-  });
+  console.log(err); // res.status(err.statusCode).json({
+  //      err,
+  //      status: err.status,
+  //      message: err.message,
+  //      stack: err.stack
+  // })
 };
 
 var handleProductionErrors = function handleProductionErrors(err, res) {
