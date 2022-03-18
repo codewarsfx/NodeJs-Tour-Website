@@ -8,7 +8,7 @@ const Email = require('../utils/email')
 
 
 //private function to sign JWTs
-const signJWT = async (id,response,statusCode,userData) => {
+const signJWT = async (id,response,req,statusCode,userData) => {
     
     
     const cookieOptions ={
@@ -44,7 +44,7 @@ exports.signup = asyncErrorCatcher(async (req,res)=>{
     
     await new Email(userData, url).sendWelcome()
     
-    signJWT(userData._id,res,201,userData)
+    signJWT(userData._id,res,req,201,userData)
 
 })
 
@@ -68,7 +68,7 @@ exports.login = asyncErrorCatcher( async (req,res,next)=>{
     }
 
  ;
-    signJWT(userWithEmail._id,res,200,userWithEmail)
+    signJWT(userWithEmail._id,res,req,200,userWithEmail)
 
 })
 
@@ -228,7 +228,7 @@ exports.resetPassword = asyncErrorCatcher(
         await userWthResetToken.save()
         
         
-     signJWT(userWthResetToken._id,res,200)  
+     signJWT(userWthResetToken._id,res,req,200)  
     }
 )
 
@@ -243,7 +243,7 @@ exports.updatePassword = asyncErrorCatcher(async (req,res,next)=>{
     
     await userFromDatabase.save()
     
-    signJWT(userFromDatabase._id,res,200)
+    signJWT(userFromDatabase._id,res,req,200)
 
 })
 

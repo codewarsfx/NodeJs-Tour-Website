@@ -21,7 +21,7 @@ var AppError = require('../utils/appError');
 var Email = require('../utils/email'); //private function to sign JWTs
 
 
-var signJWT = function signJWT(id, response, statusCode, userData) {
+var signJWT = function signJWT(id, response, req, statusCode, userData) {
   var cookieOptions, jwtToken;
   return regeneratorRuntime.async(function signJWT$(_context) {
     while (1) {
@@ -29,7 +29,8 @@ var signJWT = function signJWT(id, response, statusCode, userData) {
         case 0:
           cookieOptions = {
             expires: new Date(Date.now() + process.env.JWT_TOKEN_EXPIRESIN * 24 * 60 * 60 * 1000),
-            httpOnly: true
+            httpOnly: true,
+            secure: req.secure || req.headers['x-forwarded-proto'] == 'https'
           };
 
           if (process.env.NODE_ENV === "production") {
@@ -78,7 +79,7 @@ exports.signup = asyncErrorCatcher(function _callee(req, res) {
           return regeneratorRuntime.awrap(new Email(userData, url).sendWelcome());
 
         case 6:
-          signJWT(userData._id, res, 201, userData);
+          signJWT(userData._id, res, req, 201, userData);
 
         case 7:
         case "end":
@@ -135,7 +136,7 @@ exports.login = asyncErrorCatcher(function _callee2(req, res, next) {
 
         case 13:
           ;
-          signJWT(userWithEmail._id, res, 200, userWithEmail);
+          signJWT(userWithEmail._id, res, req, 200, userWithEmail);
 
         case 15:
         case "end":
@@ -397,7 +398,7 @@ exports.resetPassword = asyncErrorCatcher(function _callee6(req, res, next) {
           return regeneratorRuntime.awrap(userWthResetToken.save());
 
         case 12:
-          signJWT(userWthResetToken._id, res, 200);
+          signJWT(userWthResetToken._id, res, req, 200);
 
         case 13:
         case "end":
@@ -439,7 +440,7 @@ exports.updatePassword = asyncErrorCatcher(function _callee7(req, res, next) {
           return regeneratorRuntime.awrap(userFromDatabase.save());
 
         case 12:
-          signJWT(userFromDatabase._id, res, 200);
+          signJWT(userFromDatabase._id, res, req, 200);
 
         case 13:
         case "end":
