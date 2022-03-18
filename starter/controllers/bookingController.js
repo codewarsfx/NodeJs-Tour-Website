@@ -1,6 +1,7 @@
 const asyncErrorCatcher = require('../utils/AsyncErrorCatcher')
 const Tour = require('../Models/tourModels')
 const Booking = require('../Models/bookingsModel')
+const User = require('../Models/userModel')
 const controllerFactory = require('./ControllerFactory')
 const stripe = require('stripe')('sk_test_51IjOtBLlSmsaw58gsTlo3DGfHO2kbkKpJb3f4dijaxKs0Xbd6vbJUudKlDzvBezpVL0dLyHFh1ECtfrMhvIGSkmn00xJPb77r9')
 
