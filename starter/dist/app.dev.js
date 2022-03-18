@@ -21,7 +21,9 @@ var cookieParser = require('cookie-parser');
 
 var contentSecurityPolicy = require("helmet-csp");
 
-var compression = require('compression'); //internal project modules
+var compression = require('compression');
+
+var cors = require('cors'); //internal project modules
 
 
 var viewRouter = require('./routes/viewRoutes');
@@ -38,7 +40,13 @@ var bookingsRouter = require('./routes/bookingsRoute');
 
 var errorController = require('./controllers/errorController');
 
-var app = express(); //setting up the pug template 
+var app = express(); //to enable checking the headers for a secure connection via heroku 
+
+app.enable('trust proxy'); //enable cors for both the api and views
+
+app.use(cors()); //enable cors special req verbs
+
+app.options('*', cors()); //setting up the pug template 
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));

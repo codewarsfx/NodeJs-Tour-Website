@@ -13,7 +13,8 @@ const signJWT = async (id,response,statusCode,userData) => {
     
     const cookieOptions ={
         expires:new Date(Date.now() + process.env.JWT_TOKEN_EXPIRESIN * 24 * 60 * 60 * 1000),
-        httpOnly:true
+        httpOnly:true,
+        secure: req.secure || req.headers['x-forwarded-proto'] == 'https'
     }
     
     if(process.env.NODE_ENV === "production"){

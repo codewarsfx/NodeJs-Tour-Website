@@ -10,6 +10,8 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const contentSecurityPolicy = require("helmet-csp")
 const compression = require('compression')
+const cors = require('cors')
+
 
 
 
@@ -27,6 +29,16 @@ const errorController = require('./controllers/errorController')
 
 const app = express();
 
+//to enable checking the headers for a secure connection via heroku 
+app.enable('trust proxy')
+
+//enable cors for both the api and views
+app.use(cors())
+
+//enable cors special req verbs
+app.options('*',cors())
+
+
 //setting up the pug template 
 app.set('view engine','pug')
 app.set('views',path.join(__dirname,'views'))
@@ -39,9 +51,6 @@ app.use(express.static(path.join(__dirname,'public')))
 //set security headers 
 app.use(
   helmet())
-
-
-
 
 // limit the number of requests
 app.use('/api',rateLimiter({
@@ -100,10 +109,6 @@ app.use(compression())
 
 //views routes
 app.use('/',viewRouter)
-
-
-
-
 //api routes
 app.use('/api/v1/tours',tourRouter)
 app.use('/api/v1/users',userRouter)
@@ -115,8 +120,8 @@ app.all('*',(req, res, next) =>{
      
 })   
 
-
-
 //general error middleware
 app.use(errorController)
+
+
 module.exports = app
