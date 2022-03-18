@@ -53,12 +53,10 @@ exports.createSession = asyncErrorCatcher( async (req,res)=>{
 // )
 
 
-const createBooking = event =>{
+const createBooking = (event,res) =>{
     
     if(event.type == "checkout.session.completed"){
-        
-        console.log(event.data.object)
-        response.status(200).send('webhook received successfully')
+        res.status(200).send('webhook received successfully')
         
     }
 }
@@ -81,7 +79,7 @@ exports.webHookBookings= asyncErrorCatcher(
                     endpointSecret
                 )
                 
-                createBooking(event)
+                createBooking(event,res)
             }
             catch(error){
                 console.log('sorry webhook signature verification failed.',error.message)
