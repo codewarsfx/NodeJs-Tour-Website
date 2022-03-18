@@ -85,8 +85,8 @@ var createBooking = function createBooking(event, res) {
           }));
 
         case 3:
-          userId = _context2.sent._id;
-          console.log(event.data.object['customer_details'].email); // await Booking.create({
+          userId = _context2.sent;
+          console.log(userId); // await Booking.create({
           //     tour:event.data.object['client_reference_id'],
           //     user:userId,
           //     price:event.data.object['amount_total']/100,
