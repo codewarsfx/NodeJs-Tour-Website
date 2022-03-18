@@ -53,9 +53,22 @@ exports.createSession = asyncErrorCatcher( async (req,res)=>{
 // )
 
 
-const createBooking = (event,res) =>{
+const createBooking = async (event,res) =>{
+    
+    
     
     if(event.type == "checkout.session.completed"){
+        
+        const userId = (await User.find({email:event.data.object['customer_details'].email}))._id
+        
+        await Booking.create({
+            tour:event.data.object['client_reference_id'],
+            user:userId,
+            price:event.data.object['amount_total']/100,
+            paid: true
+        })
+        
+        
         res.status(200).send('webhook received successfully')
         
     }
