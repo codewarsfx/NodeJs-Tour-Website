@@ -17,7 +17,6 @@ exports.deleteOne= Doc => ( asyncErrorCatcher (async (req,res)=>{
 
 exports.getOne =  (Doc,populatePath)=>(
     asyncErrorCatcher(async (req, res, next)=>{
-        
     let DataQueryObject =  Doc.findById(req.params.id)
     if(populatePath){
            DataQueryObject = DataQueryObject.populate(populatePath

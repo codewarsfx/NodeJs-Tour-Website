@@ -14,8 +14,10 @@ exports.getOverview = asyncErrorCatcher(async (req,res)=>{
 })
 
 exports.getTour = asyncErrorCatcher(
-    
-    async (req,res,next)=>{
+
+    async (req,res)=>{
+        
+        console.log(req.originalUrl)
         const tour =await Tour.findOne({slug:req.params.slug}).populate({
             path:'reviews'
         })  
@@ -25,8 +27,6 @@ exports.getTour = asyncErrorCatcher(
       title: `${tour.name} Tour`,
       tour,
     });
-    
-    next()
         }
 )
 

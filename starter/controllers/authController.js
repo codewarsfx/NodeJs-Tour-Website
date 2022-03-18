@@ -131,6 +131,7 @@ exports.protect = asyncErrorCatcher(async (req,res,next)=>{
 
 
 exports.protectViews= asyncErrorCatcher(async (req,res,next)=>{
+    console.log('hey')
    if(req.cookies.jwt){
         const token = req.cookies.jwt
         try{

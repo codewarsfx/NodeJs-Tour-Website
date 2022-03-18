@@ -31,26 +31,26 @@ exports.getOverview = asyncErrorCatcher(function _callee(req, res) {
     }
   });
 });
-exports.getTour = asyncErrorCatcher(function _callee2(req, res, next) {
+exports.getTour = asyncErrorCatcher(function _callee2(req, res) {
   var tour;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          _context2.next = 2;
+          console.log(req.originalUrl);
+          _context2.next = 3;
           return regeneratorRuntime.awrap(Tour.findOne({
             slug: req.params.slug
           }).populate({
             path: 'reviews'
           }));
 
-        case 2:
+        case 3:
           tour = _context2.sent;
           res.status(200).render('tour', {
             title: "".concat(tour.name, " Tour"),
             tour: tour
           });
-          next();
 
         case 5:
         case "end":

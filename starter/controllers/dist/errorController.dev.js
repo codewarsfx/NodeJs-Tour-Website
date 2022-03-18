@@ -63,7 +63,7 @@ module.exports = function (error, req, res, next) {
   error.status = error.status || "error";
 
   if (process.env.NODE_ENV === "development") {
-    handleDevelopmentErrors(error, res);
+    return handleDevelopmentErrors(error, res);
   } else if (process.env.NODE_ENV === "production") {
     var newError = _objectSpread({}, error);
 
@@ -87,8 +87,6 @@ module.exports = function (error, req, res, next) {
       newError = handleTokenExpiredrrors();
     }
 
-    handleProductionErrors(newError, res);
+    return handleProductionErrors(newError, res);
   }
-
-  next();
 };
