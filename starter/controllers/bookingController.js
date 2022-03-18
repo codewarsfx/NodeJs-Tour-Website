@@ -55,7 +55,7 @@ exports.createSession = asyncErrorCatcher( async (req,res)=>{
 
 const createBooking = event =>{
     
-    if(event.type == "'checkout.session.completed'"){
+    if(event.type == "checkout.session.completed"){
         
         console.log(event.data.object)
         response.status(200).send('webhook received successfully')
@@ -67,16 +67,15 @@ const createBooking = event =>{
 
 exports.webHookBookings= asyncErrorCatcher(
     async (req,res)=>{
-        console.log('i got here')
         const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
-        
-        let event = request.body
+
+        let event = req.body
         
         if(endpointSecret){
             const signature = req.headers['stripe-signature']
             consolelog(endpointSecret,signature)
             try{
-                event= stripe.webhooks.constructEvent(
+                event=stripe.webhooks.constructEvent(
                     req.body,
                     signature,
                     endpointSecret
