@@ -72,7 +72,6 @@ var logoutUser = function logoutUser() {
 
         case 3:
           res = _context2.sent;
-          console.log(res);
 
           if (res.data.message) {
             if (window.location.pathname == "/me") {
@@ -82,20 +81,20 @@ var logoutUser = function logoutUser() {
             }
           }
 
-          _context2.next = 11;
+          _context2.next = 10;
           break;
 
-        case 8:
-          _context2.prev = 8;
+        case 7:
+          _context2.prev = 7;
           _context2.t0 = _context2["catch"](0);
           (0, _alert.createAlert)('error logging out', false);
 
-        case 11:
+        case 10:
         case "end":
           return _context2.stop();
       }
     }
-  }, null, null, [[0, 8]]);
+  }, null, null, [[0, 7]]);
 };
 
 exports.logoutUser = logoutUser;

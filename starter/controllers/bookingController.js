@@ -60,18 +60,14 @@ const createBooking = async (event,res) =>{
     
     if(event.type == "checkout.session.completed"){
         
-        const userId = (await User.find({email:event.data.object['customer_details'].email}))
+        const userId = (await User.findOne({email:event.data.object['customer_details'].email}))._id
         
-        console.log(userId)
-        
-        // await Booking.create({
-        //     tour:event.data.object['client_reference_id'],
-        //     user:userId,
-        //     price:event.data.object['amount_total']/100,
-        //     paid: true
-        // })
-        
-        
+        await Booking.create({
+            tour:event.data.object['client_reference_id'],
+            user:userId,
+            price:event.data.object['amount_total']/100,
+            paid: true
+        })
         res.status(200).send('webhook received successfully')
         
     }
@@ -87,7 +83,7 @@ exports.webHookBookings= asyncErrorCatcher(
         
         if(endpointSecret){
             const signature = req.headers['stripe-signature']
-            console.log(endpointSecret,signature)
+
             try{
                 event=stripe.webhooks.constructEvent(
                     req.body,

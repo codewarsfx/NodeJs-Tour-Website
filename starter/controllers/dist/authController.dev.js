@@ -231,59 +231,57 @@ exports.protectViews = asyncErrorCatcher(function _callee4(req, res, next) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
-          console.log('hey');
-
           if (!req.cookies.jwt) {
-            _context5.next = 21;
+            _context5.next = 20;
             break;
           }
 
           token = req.cookies.jwt;
-          _context5.prev = 3;
-          _context5.next = 6;
+          _context5.prev = 2;
+          _context5.next = 5;
           return regeneratorRuntime.awrap(jwt.verify(token, process.env.SIGNATURE));
 
-        case 6:
+        case 5:
           jwtTokenPayload = _context5.sent;
-          _context5.next = 9;
+          _context5.next = 8;
           return regeneratorRuntime.awrap(UserModel.findById(jwtTokenPayload.id));
 
-        case 9:
+        case 8:
           currentUser = _context5.sent;
 
           if (currentUser) {
-            _context5.next = 12;
+            _context5.next = 11;
             break;
           }
 
           return _context5.abrupt("return", next());
 
-        case 12:
+        case 11:
           if (!currentUser.checkPasswordUpdate(jwtTokenPayload.iat)) {
-            _context5.next = 14;
+            _context5.next = 13;
             break;
           }
 
           return _context5.abrupt("return", next());
 
-        case 14:
+        case 13:
           res.locals.user = currentUser;
           return _context5.abrupt("return", next());
 
-        case 18:
-          _context5.prev = 18;
-          _context5.t0 = _context5["catch"](3);
+        case 17:
+          _context5.prev = 17;
+          _context5.t0 = _context5["catch"](2);
           return _context5.abrupt("return", next());
 
-        case 21:
+        case 20:
           next();
 
-        case 22:
+        case 21:
         case "end":
           return _context5.stop();
       }
     }
-  }, null, null, [[3, 18]]);
+  }, null, null, [[2, 17]]);
 }); // this function gives users the ability to perform  certain actions based on the role they posses 
 
 exports.authorizeUser = function (_ref) {

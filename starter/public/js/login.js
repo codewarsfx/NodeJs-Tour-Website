@@ -35,7 +35,6 @@ export const logoutUser = async ()=>{
         method:'get',
         url:'/api/v1/users/logOut',
     })
-    console.log(res)
     if(res.data.message){
         if(window.location.pathname =="/me"){
             window.assign('/')

@@ -75,27 +75,29 @@ var createBooking = function createBooking(event, res) {
       switch (_context2.prev = _context2.next) {
         case 0:
           if (!(event.type == "checkout.session.completed")) {
-            _context2.next = 6;
+            _context2.next = 7;
             break;
           }
 
           _context2.next = 3;
-          return regeneratorRuntime.awrap(User.find({
+          return regeneratorRuntime.awrap(User.findOne({
             email: event.data.object['customer_details'].email
           }));
 
         case 3:
-          userId = _context2.sent;
-          console.log(userId); // await Booking.create({
-          //     tour:event.data.object['client_reference_id'],
-          //     user:userId,
-          //     price:event.data.object['amount_total']/100,
-          //     paid: true
-          // })
-
-          res.status(200).send('webhook received successfully');
+          userId = _context2.sent._id;
+          _context2.next = 6;
+          return regeneratorRuntime.awrap(Booking.create({
+            tour: event.data.object['client_reference_id'],
+            user: userId,
+            price: event.data.object['amount_total'] / 100,
+            paid: true
+          }));
 
         case 6:
+          res.status(200).send('webhook received successfully');
+
+        case 7:
         case "end":
           return _context2.stop();
       }
@@ -114,7 +116,6 @@ exports.webHookBookings = asyncErrorCatcher(function _callee2(req, res) {
 
           if (endpointSecret) {
             signature = req.headers['stripe-signature'];
-            console.log(endpointSecret, signature);
 
             try {
               event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
