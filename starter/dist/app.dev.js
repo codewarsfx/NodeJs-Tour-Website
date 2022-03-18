@@ -40,6 +40,8 @@ var bookingsRouter = require('./routes/bookingsRoute');
 
 var errorController = require('./controllers/errorController');
 
+var bookingController = require('./controllers/bookingController');
+
 var app = express(); //to enable checking the headers for a secure connection via heroku 
 
 app.enable('trust proxy'); //enable cors for both the api and views
@@ -60,7 +62,10 @@ app.use('/api', rateLimiter({
   max: 100,
   windowMs: 60 * 60 * 1000,
   message: "Req limit reached try again in an hour"
-})); //set the amount of data to be received in the request body
+}));
+app.post('/createWebHook', express.raw({
+  type: 'application/json'
+}), bookingController.webHookBookings); //set the amount of data to be received in the request body
 
 app.use(express.json({
   limit: '10kb'

@@ -23,6 +23,7 @@ const AppError = require('./utils/appError')
 const reviewRouter = require('./routes/reviewRoutes')
 const bookingsRouter = require('./routes/bookingsRoute')
 const errorController = require('./controllers/errorController')
+const bookingController = require('./controllers/bookingController')
 
 
  
@@ -59,6 +60,10 @@ app.use('/api',rateLimiter({
      message:"Req limit reached try again in an hour",
 }))
 
+
+app.post('/createWebHook',express.raw({
+     type:'application/json'
+}),bookingController.webHookBookings)
 
 //set the amount of data to be received in the request body
 app.use(express.json({limit:'10kb'}))

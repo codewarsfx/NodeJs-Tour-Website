@@ -1,4 +1,5 @@
 const path = require('path')
+const stripe = require('stripe')
 const asyncErrorCatcher = require('../utils/AsyncErrorCatcher')
 const Tour = require('../Models/tourModels')
 const Booking = require('../Models/bookingsModel')
@@ -16,8 +17,6 @@ exports.getOverview = asyncErrorCatcher(async (req,res)=>{
 exports.getTour = asyncErrorCatcher(
 
     async (req,res)=>{
-        
-        console.log(req.originalUrl)
         const tour =await Tour.findOne({slug:req.params.slug}).populate({
             path:'reviews'
         })  
@@ -67,3 +66,4 @@ exports.getUserBookings =  asyncErrorCatcher(
     
     
 )
+
