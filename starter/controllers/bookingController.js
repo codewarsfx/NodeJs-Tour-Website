@@ -62,12 +62,14 @@ const createBooking = async (event,res) =>{
         
         const userId = (await User.find({email:event.data.object['customer_details'].email}))._id
         
-        await Booking.create({
-            tour:event.data.object['client_reference_id'],
-            user:userId,
-            price:event.data.object['amount_total']/100,
-            paid: true
-        })
+        console.log(userId)
+        
+        // await Booking.create({
+        //     tour:event.data.object['client_reference_id'],
+        //     user:userId,
+        //     price:event.data.object['amount_total']/100,
+        //     paid: true
+        // })
         
         
         res.status(200).send('webhook received successfully')
