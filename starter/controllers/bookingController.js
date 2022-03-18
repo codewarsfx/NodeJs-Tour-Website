@@ -73,7 +73,7 @@ exports.webHookBookings= asyncErrorCatcher(
         
         if(endpointSecret){
             const signature = req.headers['stripe-signature']
-            consolelog(endpointSecret,signature)
+            console.log(endpointSecret,signature)
             try{
                 event=stripe.webhooks.constructEvent(
                     req.body,
