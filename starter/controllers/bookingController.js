@@ -62,7 +62,7 @@ const createBooking = async (event,res) =>{
         
         const userId = (await User.find({email:event.data.object['customer_details'].email}))._id
         
-        console.log(userId)
+        console.log(event.data.object['customer_details'].email)
         
         // await Booking.create({
         //     tour:event.data.object['client_reference_id'],
