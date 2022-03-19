@@ -12,10 +12,10 @@ var hideAlert = function hideAlert() {
 
 exports.hideAlert = hideAlert;
 
-var createAlert = function createAlert(message, type) {
+var createAlert = function createAlert(message, type, duration) {
   var el = "<div class='alert alert--".concat(type ? 'success' : 'error', "'>").concat(message, "</div>");
   document.querySelector("body").insertAdjacentHTML('afterbegin', el);
-  window.setTimeout(hideAlert, 5000);
+  window.setTimeout(hideAlert, duration);
 };
 
 exports.createAlert = createAlert;

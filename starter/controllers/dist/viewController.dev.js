@@ -110,3 +110,13 @@ exports.getUserBookings = asyncErrorCatcher(function _callee3(req, res) {
     }
   });
 });
+
+exports.showAlertMiddleWare = function (req, res, next) {
+  var bookings = req.query.bookings;
+
+  if (bookings) {
+    res.locals.alert = "You tour has been successfully booked. Check below to see list of your booked yours.";
+  }
+
+  next();
+};

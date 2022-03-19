@@ -14,14 +14,14 @@ export const loginUser = async (email,password)=>{
     })
 
     if(res.data.message){
-        createAlert("successfully logged in",true)
+        createAlert("successfully logged in",true,5000)
         window.setTimeout(()=>{
         location.assign('/')
     },150)
     }
 }
     catch(error){
-         createAlert(error.response.data.message, false)
+         createAlert(error.response.data.message, false,5000)
     }
     
 }
@@ -45,7 +45,7 @@ export const logoutUser = async ()=>{
     }
     }
     catch(error){
-        createAlert('error logging out',false)
+        createAlert('error logging out',false,5000)
     }
  
     

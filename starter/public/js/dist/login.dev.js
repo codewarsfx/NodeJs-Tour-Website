@@ -33,7 +33,7 @@ var loginUser = function loginUser(email, password) {
           res = _context.sent;
 
           if (res.data.message) {
-            (0, _alert.createAlert)("successfully logged in", true);
+            (0, _alert.createAlert)("successfully logged in", true, 5000);
             window.setTimeout(function () {
               location.assign('/');
             }, 150);
@@ -45,7 +45,7 @@ var loginUser = function loginUser(email, password) {
         case 7:
           _context.prev = 7;
           _context.t0 = _context["catch"](0);
-          (0, _alert.createAlert)(_context.t0.response.data.message, false);
+          (0, _alert.createAlert)(_context.t0.response.data.message, false, 5000);
 
         case 10:
         case "end":
@@ -87,7 +87,7 @@ var logoutUser = function logoutUser() {
         case 7:
           _context2.prev = 7;
           _context2.t0 = _context2["catch"](0);
-          (0, _alert.createAlert)('error logging out', false);
+          (0, _alert.createAlert)('error logging out', false, 5000);
 
         case 10:
         case "end":

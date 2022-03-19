@@ -1,6 +1,7 @@
 import {loginUser, logoutUser} from './login'
 import {updateSetting, updateUserInfo} from './updateUser'
 import {checkoutStripe} from './stripe'
+import {createAlert} from './alert'
 
 
 
@@ -64,6 +65,8 @@ if(domElements.formUserELement){
     })
 
 }
+
+
 const btn = document.querySelector('.btn-save-pass')
 if(btn){
     btn.addEventListener('click',()=>{
@@ -85,3 +88,15 @@ if(domElements.passwordFormElement){
     })
     
 }
+    const showAlert = async ()=> {
+    
+        const alert = document.querySelector('body').dataset.alert
+    if(alert) {       
+      await createAlert(alert,true,5000)
+    document.querySelectr('body').dataset.alert = ''
+    
+    } 
+    }
+  
+    
+   showAlert()

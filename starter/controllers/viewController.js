@@ -41,8 +41,6 @@ exports.userAccount = (req,res) =>{
     res.status(200).render('user',{
         title:'User account page'
     })
-
-    
 }
 
 exports.getUserBookings =  asyncErrorCatcher(
@@ -61,9 +59,14 @@ exports.getUserBookings =  asyncErrorCatcher(
          tourData
     }
         )  
-    }
-    
-    
-    
+    } 
 )
+
+exports.showAlertMiddleWare = (req,res,next)=>{
+ const {bookings} = req.query
+ if(bookings){
+    res.locals.alert= "You tour has been successfully booked. Check below to see list of your booked yours." 
+ }  
+next()
+}
 

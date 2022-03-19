@@ -26,7 +26,7 @@ exports.createSession = asyncErrorCatcher(function _callee(req, res) {
           _context.next = 5;
           return regeneratorRuntime.awrap(stripe.checkout.sessions.create({
             "cancel_url": "".concat(req.protocol, "://").concat(req.get('host'), "/tour/").concat(tour.slug),
-            "success_url": "".concat(req.protocol, "://").concat(req.get('host'), "/"),
+            "success_url": "".concat(req.protocol, "://").concat(req.get('host'), "/getBookings/?bookings=true"),
             "client_reference_id": req.params.tourId,
             "customer_email": req.user.email,
             "payment_method_types": ["card"],

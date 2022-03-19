@@ -6,6 +6,8 @@ var _updateUser = require("./updateUser");
 
 var _stripe = require("./stripe");
 
+var _alert = require("./alert");
+
 var domElements = {
   emailELement: document.querySelector('#email'),
   nameELement: document.querySelector('#name'),
@@ -28,12 +30,15 @@ if (domElements.buttonElement) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            e.target.textContent;
+            e.target.textContent = 'processing...';
             tourID = domElements.buttonElement.dataset.tour;
             _context.next = 4;
             return regeneratorRuntime.awrap((0, _stripe.checkoutStripe)(tourID));
 
           case 4:
+            e.target.textContent = 'Book a Tour ';
+
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -104,3 +109,32 @@ if (domElements.passwordFormElement) {
     });
   });
 }
+
+var showAlert = function showAlert() {
+  var alert;
+  return regeneratorRuntime.async(function showAlert$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          alert = document.querySelector('body').dataset.alert;
+
+          if (!alert) {
+            _context3.next = 5;
+            break;
+          }
+
+          _context3.next = 4;
+          return regeneratorRuntime.awrap((0, _alert.createAlert)(alert, true, 5000));
+
+        case 4:
+          document.querySelectr('body').dataset.alert = '';
+
+        case 5:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+};
+
+showAlert();
